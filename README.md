@@ -7,7 +7,7 @@
 
 This repository contains the anonymized data and analysis code for:
 
-> Qu, C., & Shi, Z. (2026). How the past persists: Precision-weighting governs serial dependence under uncertainty and contextual change. *Communications Psychology* (submitted).
+> Qu, C., & Shi, Z. (2026). How the past persists: Precision-weighting governs serial dependence under uncertainty and contextual change (submitted).
 
 Serial dependence—the attraction of current percepts toward recent stimuli—is modulated by both sensory uncertainty and contextual continuity. Across two time-reproduction experiments (*N* = 44), we show that a single precision-weighting process parsimoniously accounts for both effects. A three-state Kalman filter model—comprising fast (serial dependence), slow (central tendency), and bias (decision carryover) states—captures both patterns through coherence-dependent modulation of Kalman gain. What behavioral studies have characterized as contextual gating thus emerges naturally from precision-weighted inference.
 
@@ -107,5 +107,5 @@ This project is shared for academic and research purposes. Please cite the paper
 
 ## Contact
 
-- Chunyu Qu — chunyu.qu@psy.lmu.de
-- Zhuanghua Shi — strongway@psy.lmu.de
+- Chunyu Qu
+- Zhuanghua Shi
