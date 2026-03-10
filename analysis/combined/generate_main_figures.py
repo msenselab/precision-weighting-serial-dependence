@@ -56,7 +56,7 @@ set_nature_style()
 
 def load_data():
     """Load and prepare data for both experiments."""
-    base = Path(os.path.dirname(__file__)) / '..'
+    base = Path(os.path.dirname(__file__)) / '..' / '..' / 'data'
 
     # Experiment 1 = Ramped Coherence
     df1 = pd.read_pickle(base / "experiment1" / "E1.pkl")
