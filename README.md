@@ -42,7 +42,7 @@ Serial dependence—the attraction of current percepts toward recent stimuli—i
 │           └── parameters.py        # Parameter bounds and definitions
 ├── shared/
 │   └── plot_config.py        # Shared plotting configuration (Nature style)
-├── manuscript/figures/       # Generated publication figures
+├── figures/       # Generated publication figures
 ├── pyproject.toml
 └── README.md
 ```

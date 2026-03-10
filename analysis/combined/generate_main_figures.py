@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate all main manuscript figures.
+Generate all main figures.
 
   - Experiment 1 = Dynamic Coherence  (data/experiment1/E1.pkl)
   - Experiment 2 = Fixed Coherence    (data/experiment2/E2.pkl)
@@ -40,7 +40,7 @@ from plot_config import (
 )
 
 # Figure output directory
-FIG_DIR = Path(os.path.dirname(__file__)) / '..' / '..' / 'manuscript' / 'figures'
+FIG_DIR = Path(os.path.dirname(__file__)) / '..' / '..' / 'figures'
 FIG_DIR.mkdir(exist_ok=True)
 
 # Set random seed for reproducibility

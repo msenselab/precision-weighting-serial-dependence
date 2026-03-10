@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Generate all supplementary manuscript figures.
+Generate all supplementary figures.
 
-Generates supplementary figures S1, S2, S3 for the manuscript.
+Generates supplementary figures S1, S2, S3.
 """
 
 import os
@@ -28,7 +28,7 @@ set_nature_style()
 
 # Paths
 data_path = Path(os.path.dirname(__file__)) / '..'
-fig_path = Path(os.path.dirname(__file__)) / '..' / '..' / 'manuscript' / 'figures'
+fig_path = Path(os.path.dirname(__file__)) / '..' / '..' / 'figures'
 fig_path.mkdir(exist_ok=True)
 
 
