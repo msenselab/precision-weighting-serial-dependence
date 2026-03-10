@@ -15,7 +15,7 @@ Serial dependence—the attraction of current percepts toward recent stimuli—i
 
 ```
 ├── data/
-│   ├── experiment1/          # Cleaned data, Exp 1: Dynamic coherence (N = 22, 5,280 trials)
+│   ├── experiment1/          # Cleaned data, Exp 1: Ramped coherence (N = 22, 5,280 trials)
 │   │   └── E1.pkl
 │   └── experiment2/          # Cleaned data, Exp 2: Constant coherence (N = 22, 5,104 trials)
 │       └── E2.pkl
@@ -49,7 +49,7 @@ Serial dependence—the attraction of current percepts toward recent stimuli—i
 
 ## Experiments
 
-### Experiment 1: Dynamic Coherence
+### Experiment 1: Ramped Coherence
 Participants reproduced durations of random dot kinematograms (RDKs) whose motion coherence ramped up and then down within each trial, creating continuous within-trial uncertainty variation. Two coherence levels (30% and 70%) were randomly interleaved across trials.
 
 ### Experiment 2: Constant Coherence

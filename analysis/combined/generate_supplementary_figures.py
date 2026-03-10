@@ -39,8 +39,8 @@ fig_path.mkdir(exist_ok=True)
 def load_data():
     """Load and prepare data for both experiments.
 
-    df1 = Experiment 1 (Dynamic Coherence, E1.pkl)
-    df2 = Experiment 2 (Fixed Coherence,   E2.pkl)
+    df1 = Experiment 1 (Ramped Coherence, E1.pkl)
+    df2 = Experiment 2 (Constant Coherence,   E2.pkl)
     """
 
     df1_raw = pd.read_pickle(data_path / 'experiment1' / 'E1.pkl')
@@ -63,8 +63,8 @@ def load_data():
     df1 = df1_raw[df1_raw['is_outlier'] == False].copy()
     df2 = df2_raw[df2_raw['is_outlier'] == False].copy()
 
-    print(f'Exp1 (Dynamic Coherence): {len(df1)} trials, {df1.subID.nunique()} subjects')
-    print(f'Exp2 (Fixed Coherence):   {len(df2)} trials, {df2.subID.nunique()} subjects')
+    print(f'Exp1 (Ramped Coherence): {len(df1)} trials, {df1.subID.nunique()} subjects')
+    print(f'Exp2 (Constant Coherence):   {len(df2)} trials, {df2.subID.nunique()} subjects')
 
     return df1, df2
 
@@ -149,7 +149,7 @@ def plot_figS5_10back_coherence(df1, df2):
     width = 0.35
     lag_labels = [f'n-{i}' for i in range(1, 11)]
 
-    # Panel A: Experiment 1 (Dynamic Coherence)
+    # Panel A: Experiment 1 (Ramped Coherence)
     ax = axes[0]
     for i, (unc, color) in enumerate([('High', COLORS['high']), ('Low', COLORS['low'])]):
         unc_data = nback1[nback1['Coherence'] == unc].groupby('nback')['SDI'].agg(['mean', 'sem'])
@@ -165,7 +165,7 @@ def plot_figS5_10back_coherence(df1, df2):
     ax.legend(frameon=False)
     despine(ax)
 
-    # Panel B: Experiment 2 (Fixed Coherence)
+    # Panel B: Experiment 2 (Constant Coherence)
     ax = axes[1]
     for i, (unc, color) in enumerate([('High', COLORS['high']), ('Low', COLORS['low'])]):
         unc_data = nback2[nback2['Coherence'] == unc].groupby('nback')['SDI'].agg(['mean', 'sem'])
@@ -225,7 +225,7 @@ def plot_figS6_10back_transition(df1, df2):
     width = 0.2
     lag_labels = [f'n-{i}' for i in range(1, 11)]
 
-    # Panel A: Experiment 1 (Dynamic Coherence)
+    # Panel A: Experiment 1 (Ramped Coherence)
     ax = axes[0]
     for i, tt in enumerate(TRANSITION_ORDER):
         tt_data = nback1_tt[nback1_tt['TransitionType'] == tt].groupby('nback')['SDI'].agg(['mean', 'sem'])
@@ -241,7 +241,7 @@ def plot_figS6_10back_transition(df1, df2):
     ax.legend(frameon=False, ncol=2)
     despine(ax)
 
-    # Panel B: Experiment 2 (Fixed Coherence)
+    # Panel B: Experiment 2 (Constant Coherence)
     ax = axes[1]
     for i, tt in enumerate(TRANSITION_ORDER):
         tt_data = nback2_tt[nback2_tt['TransitionType'] == tt].groupby('nback')['SDI'].agg(['mean', 'sem'])
@@ -273,8 +273,8 @@ def plot_figS3_preResp_lag(df1, df2):
     Fits a single LMM per experiment with all five lag terms simultaneously:
         curBias ~ curDur + preDur + preResp_lag1 + ... + preResp_lag5 + (1|subID)
 
-    df1 = Experiment 1 (Dynamic Coherence)
-    df2 = Experiment 2 (Fixed Coherence)
+    df1 = Experiment 1 (Ramped Coherence)
+    df2 = Experiment 2 (Constant Coherence)
     """
 
     def prepare_preResp_lags(df, n_lags=5):

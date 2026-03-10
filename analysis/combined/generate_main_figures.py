@@ -2,8 +2,8 @@
 """
 Generate all main figures.
 
-  - Experiment 1 = Dynamic Coherence  (data/experiment1/E1.pkl)
-  - Experiment 2 = Fixed Coherence    (data/experiment2/E2.pkl)
+  - Experiment 1 = Ramped Coherence  (data/experiment1/E1.pkl)
+  - Experiment 2 = Constant Coherence    (data/experiment2/E2.pkl)
 """
 
 import os
@@ -58,11 +58,11 @@ def load_data():
     """Load and prepare data for both experiments."""
     base = Path(os.path.dirname(__file__)) / '..'
 
-    # Experiment 1 = Dynamic Coherence
+    # Experiment 1 = Ramped Coherence
     df1 = pd.read_pickle(base / "experiment1" / "E1.pkl")
     df1 = df1[df1["is_outlier"] == False].copy()
 
-    # Experiment 2 = Fixed Coherence
+    # Experiment 2 = Constant Coherence
     df2 = pd.read_pickle(base / "experiment2" / "E2.pkl")
     df2 = df2[df2["is_outlier"] == False].copy()
 
@@ -71,7 +71,7 @@ def load_data():
         {'HH': 'Same', 'LL': 'Same', 'HL': 'Switch', 'LH': 'Switch'})
     df2['SameSwitch'] = df2['TransitionType'].map(
         {'HH': 'Same', 'LL': 'Same', 'HL': 'Switch', 'LH': 'Switch'})
-    # Dynamic Coherence experiment has curCoherence column
+    # Ramped Coherence experiment has curCoherence column
     df1['curCoherenceLevel'] = df1['curCoherence'].map({0.3: 'High', 0.7: 'Low'})
 
     # Decision Carryover: mark each trial as 'Long' or 'Short'
@@ -96,8 +96,8 @@ def load_data():
         df['ResponseType'] = np.where(df['rpr'] > sub_means, 'Long', 'Short')
         df['priorResponseType'] = df.groupby('subID')['ResponseType'].shift(1)
 
-    print(f"Experiment 1 (Dynamic Coherence): {len(df1)} trials, {df1['subID'].nunique()} subjects")
-    print(f"Experiment 2 (Fixed Coherence):   {len(df2)} trials, {df2['subID'].nunique()} subjects")
+    print(f"Experiment 1 (Ramped Coherence): {len(df1)} trials, {df1['subID'].nunique()} subjects")
+    print(f"Experiment 2 (Constant Coherence):   {len(df2)} trials, {df2['subID'].nunique()} subjects")
 
     return df1, df2
 
@@ -109,7 +109,7 @@ def load_data():
 def compute_sdi_dataframes(df1, df2):
     """Compute Serial Dependence Index for both experiments."""
 
-    # Experiment 1 (Dynamic Coherence)
+    # Experiment 1 (Ramped Coherence)
     sdi_list_1 = []
     for (sub_id, trans_type), group in df1.groupby(['subID', 'TransitionType']):
         if len(group) >= 5:
@@ -124,7 +124,7 @@ def compute_sdi_dataframes(df1, df2):
             })
 
     df_sdi_1 = pd.DataFrame(sdi_list_1)
-    # Exp 1 (Dynamic Coherence) -- group SDI by coherence level
+    # Exp 1 (Ramped Coherence) -- group SDI by coherence level
     df_sdi_1['curCoherenceLevel'] = df_sdi_1['TransitionType'].map(
         {'HH': 'High', 'HL': 'Low', 'LH': 'High', 'LL': 'Low'}
     )
@@ -132,7 +132,7 @@ def compute_sdi_dataframes(df1, df2):
         {'HH': 'Same', 'LL': 'Same', 'HL': 'Switch', 'LH': 'Switch'}
     )
 
-    # Experiment 2 (Fixed Coherence)
+    # Experiment 2 (Constant Coherence)
     sdi_list_2 = []
     for (sub_id, trans_type), group in df2.groupby(['subID', 'TransitionType']):
         if len(group) >= 5:
@@ -210,7 +210,7 @@ def plot_fig2_central_tendency(df1, df2):
     """Figure 2: Central Tendency -- Combined Exp 1 & 2."""
     fig, axes = plt.subplots(1, 2, figsize=(10, 4.5))
 
-    # Panel A: Experiment 1 (Dynamic Coherence)
+    # Panel A: Experiment 1 (Ramped Coherence)
     ax = axes[0]
     mBiasDurPar1 = df1.groupby(['subID', 'TransitionType', 'curDur'])['curBias'].mean().reset_index()
     mBiasDurAll1 = mBiasDurPar1.groupby(['TransitionType', 'curDur'])['curBias'].agg(['mean', 'sem']).reset_index()
@@ -230,7 +230,7 @@ def plot_fig2_central_tendency(df1, df2):
     ax.legend(title='Transition', frameon=False, fontsize=8)
     despine(ax)
 
-    # Panel B: Experiment 2 (Fixed Coherence)
+    # Panel B: Experiment 2 (Constant Coherence)
     ax = axes[1]
     mBiasDurPar2 = df2.groupby(['subID', 'TransitionType', 'curDur'])['curBias'].mean().reset_index()
     mBiasDurAll2 = mBiasDurPar2.groupby(['TransitionType', 'curDur'])['curBias'].agg(['mean', 'sem']).reset_index()
@@ -264,8 +264,8 @@ def plot_fig3_serial_dependence(df1, df2, df_sdi_1, df_sdi_2):
     """Figure 3: Serial Dependence -- 4 subplots.
 
     Panels A/B: line plots of Bias ~ previous duration by transition type.
-    Panel C: Exp 1 (Dynamic Coherence) SDI boxplots by curCoherenceLevel.
-    Panel D: Exp 2 (Fixed Coherence) SDI boxplots by SameSwitch.
+    Panel C: Exp 1 (Ramped Coherence) SDI boxplots by curCoherenceLevel.
+    Panel D: Exp 2 (Constant Coherence) SDI boxplots by SameSwitch.
     """
     fig, axes = plt.subplots(2, 2, figsize=(10, 8))
 
@@ -313,7 +313,7 @@ def plot_fig3_serial_dependence(df1, df2, df_sdi_1, df_sdi_2):
     ax.set_ylim(-0.15, 0.2)
     despine(ax)
 
-    # Panel C: Exp 1 (Dynamic Coherence) SDI boxplots -- by Coherence
+    # Panel C: Exp 1 (Ramped Coherence) SDI boxplots -- by Coherence
     ax = axes[1, 0]
     order_coh = ['High', 'Low']
     palette_coh = {'High': COLORS['high'], 'Low': COLORS['low']}
@@ -334,7 +334,7 @@ def plot_fig3_serial_dependence(df1, df2, df_sdi_1, df_sdi_2):
     if p_val < 0.05:
         add_significance_stars(ax, 0, 1, y_max, p_val)
 
-    # Panel D: Exp 2 (Fixed Coherence) SDI boxplots -- by Same vs. Switch
+    # Panel D: Exp 2 (Constant Coherence) SDI boxplots -- by Same vs. Switch
     ax = axes[1, 1]
     order_ss = ['Same', 'Switch']
     palette_ss = {'Same': COLORS['same'], 'Switch': COLORS['switch']}
@@ -368,8 +368,8 @@ def plot_fig3_serial_dependence(df1, df2, df_sdi_1, df_sdi_2):
 def plot_fig4_sanity_check(df1, df2):
     """Figure 4: Sanity Check -- n-3 to n+2 analysis.
 
-    Panel A: Experiment 1 (Dynamic Coherence) grouped by curCoherenceLevel.
-    Panel B: Experiment 2 (Fixed Coherence)   grouped by SameSwitch.
+    Panel A: Experiment 1 (Ramped Coherence) grouped by curCoherenceLevel.
+    Panel B: Experiment 2 (Constant Coherence)   grouped by SameSwitch.
     """
 
     def compute_multilag_by_group(df_exp, group_col, group_values):
@@ -418,9 +418,9 @@ def plot_fig4_sanity_check(df1, df2):
 
         return results, lag_labels
 
-    # Panel A: Exp 1 (Dynamic Coherence) -- grouped by coherence
+    # Panel A: Exp 1 (Ramped Coherence) -- grouped by coherence
     results_exp1, lag_labels = compute_multilag_by_group(df1, 'curCoherenceLevel', ['High', 'Low'])
-    # Panel B: Exp 2 (Fixed Coherence)   -- grouped by Same/Switch
+    # Panel B: Exp 2 (Constant Coherence)   -- grouped by Same/Switch
     results_exp2, _ = compute_multilag_by_group(df2, 'SameSwitch', ['Same', 'Switch'])
 
     fig, axes = plt.subplots(1, 2, figsize=(12, 5))
@@ -636,7 +636,7 @@ def load_model_data(df1, df2):
 
     try:
         results_df = pd.read_csv(MODEL_DIR / '135model_fits.csv')
-        # exp=1 = Dynamic Coherence (Experiment 1), exp=2 = Fixed Coherence (Experiment 2)
+        # exp=1 = Ramped Coherence (Experiment 1), exp=2 = Constant Coherence (Experiment 2)
 
         from three_state_135_nolog import (
             C_AXIS, S_AXIS, B_AXIS,
@@ -658,7 +658,7 @@ def load_model_data(df1, df2):
         sub_map_dyn = {f'S{i+1:02d}': orig for i, orig in enumerate(dyn_orig_ids)}
         sub_map_fix = {f'S{i+1:02d}': orig for i, orig in enumerate(fix_orig_ids)}
 
-        # df1 = Exp 1 (Dynamic Coherence)
+        # df1 = Exp 1 (Ramped Coherence)
         exp1_model = (df1.assign(
             exp=1,
             Structure=lambda x: np.where(x['TransitionType'].isin(same_set), 'Same', 'Switch')
@@ -668,7 +668,7 @@ def load_model_data(df1, df2):
         }).astype({'coherence': float}))
         exp1_model['Sub'] = exp1_model['Sub'].map(sub_map_dyn)
 
-        # df2 = Exp 2 (Fixed Coherence)
+        # df2 = Exp 2 (Constant Coherence)
         exp2_model = (df2.assign(
             exp=2,
             Structure=lambda x: np.where(x['TransitionType'].isin(same_set), 'Same', 'Switch')
@@ -1065,8 +1065,8 @@ def plot_fig8_trial_level_sd(df_model, results_df, best_exp1, best_exp2,
     """Figure 8: Trial-Level Serial Dependence by Condition.
 
     EXPERIMENT SWAP applied:
-        exp_num == 1 (Dynamic Coherence) -> coherence grouping
-        exp_num == 2 (Fixed Coherence)   -> Same/Switch grouping
+        exp_num == 1 (Ramped Coherence) -> coherence grouping
+        exp_num == 2 (Constant Coherence)   -> Same/Switch grouping
     """
 
     def plot_sd_by_condition(data, results_df, exp_num, model_name, ax):
@@ -1099,8 +1099,8 @@ def plot_fig8_trial_level_sd(df_model, results_df, best_exp1, best_exp2,
         exp_data['preDur'] = exp_data.groupby('Sub')['Duration'].shift(1)
 
         # SWAPPED conditions:
-        # exp_num == 1 -> Dynamic Coherence -> coherence grouping
-        # exp_num == 2 -> Fixed Coherence   -> Same/Switch grouping
+        # exp_num == 1 -> Ramped Coherence -> coherence grouping
+        # exp_num == 2 -> Constant Coherence   -> Same/Switch grouping
         if exp_num == 1:
             exp_data['coh_cat'] = np.where(exp_data['coherence'] < 0.5, 'High', 'Low')
             sim_data['coh_cat'] = np.where(sim_data['coherence'] < 0.5, 'High', 'Low')
