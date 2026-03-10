@@ -38,7 +38,6 @@ Serial dependence—the attraction of current percepts toward recent stimuli—i
 │           ├── config.py             # 135-model space (C × S × B axes)
 │           ├── engine.py             # Kalman filter equations
 │           ├── fitting.py            # MLE parameter optimization
-│           ├── ppc.py                # Posterior predictive checks
 │           └── parameters.py        # Parameter bounds and definitions
 ├── shared/
 │   └── plot_config.py        # Shared plotting configuration (Nature style)
@@ -87,7 +86,7 @@ Coherence modulation follows:
 - Process noise: *Q(c)* = *Q*_base × exp(*α* × (1 − *c*))
 - Measurement noise: *R(c)* = 1 if *c* ≥ 0.5, *r*_low if *c* < 0.5
 
-Model comparison uses AIC across all 135 configurations. Posterior predictive checks (PPC) assess recovery of CTI and SDI.
+Model comparison uses AIC across all 135 configurations. Posterior predictive checks (PPC) assess recovery of CTI and SDI. PPC routines are implemented directly in `1_135Model_ThreeState.ipynb` rather than as a separate module.
 
 ## Data Format
 

@@ -27,7 +27,7 @@ from plot_config import (
 set_nature_style()
 
 # Paths
-data_path = Path(os.path.dirname(__file__)) / '..'
+data_path = Path(os.path.dirname(__file__)) / '..' / '..' / 'data'
 fig_path = Path(os.path.dirname(__file__)) / '..' / '..' / 'figures'
 fig_path.mkdir(exist_ok=True)
 
