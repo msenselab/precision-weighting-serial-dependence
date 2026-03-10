@@ -2,11 +2,8 @@
 """
 Generate all main manuscript figures.
 
-EXPERIMENT SWAP (manuscript presentation order):
-  - New Experiment 1 = Dynamic Coherence (data from E2.pkl)
-  - New Experiment 2 = Fixed Coherence   (data from E1.pkl)
-
-Data files are NOT renamed; only figure labels and panel ordering change.
+  - Experiment 1 = Dynamic Coherence  (data/experiment1/E1.pkl)
+  - Experiment 2 = Fixed Coherence    (data/experiment2/E2.pkl)
 """
 
 import os
@@ -35,7 +32,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Add parent directory to path for shared module
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'shared'))
 
 from plot_config import (
     COLORS, TRANSITION_ORDER, TRANSITION_COLORS, TRANSITION_PALETTE,
@@ -43,7 +40,7 @@ from plot_config import (
 )
 
 # Figure output directory
-FIG_DIR = Path(os.path.dirname(__file__)) / '..' / 'manuscript' / 'figures'
+FIG_DIR = Path(os.path.dirname(__file__)) / '..' / '..' / 'manuscript' / 'figures'
 FIG_DIR.mkdir(exist_ok=True)
 
 # Set random seed for reproducibility
@@ -54,24 +51,19 @@ set_nature_style()
 
 
 # ============================================================
-# DATA LOADING  (experiment swap happens here)
+# DATA LOADING
 # ============================================================
 
 def load_data():
-    """Load and prepare data for both experiments.
-
-    EXPERIMENT SWAP:
-        df1  <-- E2.pkl  (new Exp 1: Dynamic Coherence)
-        df2  <-- E1.pkl  (new Exp 2: Fixed Coherence)
-    """
+    """Load and prepare data for both experiments."""
     base = Path(os.path.dirname(__file__)) / '..'
 
-    # New Experiment 1 = Dynamic Coherence (old Exp 2, file E2.pkl)
-    df1 = pd.read_pickle(base / "Experiment2" / "Analysis" / "E2.pkl")
+    # Experiment 1 = Dynamic Coherence
+    df1 = pd.read_pickle(base / "experiment1" / "E1.pkl")
     df1 = df1[df1["is_outlier"] == False].copy()
 
-    # New Experiment 2 = Fixed Coherence (old Exp 1, file E1.pkl)
-    df2 = pd.read_pickle(base / "Experiment1" / "Analysis" / "E1.pkl")
+    # Experiment 2 = Fixed Coherence
+    df2 = pd.read_pickle(base / "experiment2" / "E2.pkl")
     df2 = df2[df2["is_outlier"] == False].copy()
 
     # Add grouping variables
@@ -261,7 +253,6 @@ def plot_fig2_central_tendency(df1, df2):
     plt.tight_layout()
     plt.savefig(FIG_DIR / 'fig2_central_tendency.png', dpi=150, bbox_inches='tight')
     plt.savefig(FIG_DIR / 'fig2_central_tendency.pdf', bbox_inches='tight')
-    plt.close()
     print('Saved fig2_central_tendency')
 
 
@@ -367,7 +358,6 @@ def plot_fig3_serial_dependence(df1, df2, df_sdi_1, df_sdi_2):
     plt.tight_layout()
     plt.savefig(FIG_DIR / 'fig3_serial_dependence.png', dpi=300, bbox_inches='tight')
     plt.savefig(FIG_DIR / 'fig3_serial_dependence.pdf', bbox_inches='tight')
-    plt.close()
     print(f"Saved fig3_serial_dependence")
 
 
@@ -494,7 +484,6 @@ def plot_fig4_sanity_check(df1, df2):
     plt.tight_layout()
     plt.savefig(FIG_DIR / 'fig4_sanity_check.png', dpi=300, bbox_inches='tight')
     plt.savefig(FIG_DIR / 'fig4_sanity_check.pdf', bbox_inches='tight')
-    plt.close()
     print(f"Saved fig4_sanity_check")
 
 
@@ -626,7 +615,6 @@ def plot_fig5_cross_experiment(df1, df2, df_sdi_1, df_sdi_2):
     plt.tight_layout()
     plt.savefig(FIG_DIR / 'fig5_cross_experiment.png', dpi=300, bbox_inches='tight')
     plt.savefig(FIG_DIR / 'fig5_cross_experiment.pdf', bbox_inches='tight')
-    plt.close()
     print(f"\nSaved fig5_cross_experiment")
 
 
@@ -640,19 +628,15 @@ def load_model_data(df1, df2):
     Returns (MODEL_LOADED, results_df, df_model, best_exp1, best_exp2,
              best_data_1, best_data_2) or (False, ...) on failure.
     """
-    base = Path(os.path.dirname(__file__)) / '..'
-    MODEL_DIR = base / 'Modeling' / 'Kalman filter' / 'Output_135Model'
-    MODEL_CODE_DIR = base / 'Modeling' / 'Kalman filter'
+    base = Path(os.path.dirname(__file__)) / '..' / '..'
+    MODEL_DIR = base / 'modeling' / 'three_state_kalman' / 'Output_135Model'
+    MODEL_CODE_DIR = base / 'modeling' / 'three_state_kalman'
 
     sys.path.insert(0, str(MODEL_CODE_DIR))
 
     try:
         results_df = pd.read_csv(MODEL_DIR / '135model_fits.csv')
-
-        # EXPERIMENT SWAP for model results:
-        # The original model fits used exp=1 for Fixed and exp=2 for Dynamic.
-        # Remap so exp numbers match the new manuscript assignment.
-        results_df['exp'] = results_df['exp'].map({1: 2, 2: 1})
+        # exp=1 = Dynamic Coherence (Experiment 1), exp=2 = Fixed Coherence (Experiment 2)
 
         from three_state_135_nolog import (
             C_AXIS, S_AXIS, B_AXIS,
@@ -667,23 +651,32 @@ def load_model_data(df1, df2):
         # Prepare data for modeling in correct format
         same_set = {'HH', 'LL'}
 
-        # df1 = new Exp 1 (Dynamic Coherence, from E2.pkl)
+        # Map anonymized S01..S22 -> original integer IDs used in model fits.
+        # Both use the same sorted order: S01 = smallest original ID, etc.
+        dyn_orig_ids = sorted(results_df[results_df['exp'] == 1]['Sub'].unique())
+        fix_orig_ids = sorted(results_df[results_df['exp'] == 2]['Sub'].unique())
+        sub_map_dyn = {f'S{i+1:02d}': orig for i, orig in enumerate(dyn_orig_ids)}
+        sub_map_fix = {f'S{i+1:02d}': orig for i, orig in enumerate(fix_orig_ids)}
+
+        # df1 = Exp 1 (Dynamic Coherence)
         exp1_model = (df1.assign(
             exp=1,
             Structure=lambda x: np.where(x['TransitionType'].isin(same_set), 'Same', 'Switch')
         ).rename(columns={
             'curDur': 'Duration', 'curBias': 'Bias', 'rpr': 'Reproduction',
             'curCoherence': 'coherence', 'subID': 'Sub'
-        }).astype({'coherence': float, 'Sub': int}))
+        }).astype({'coherence': float}))
+        exp1_model['Sub'] = exp1_model['Sub'].map(sub_map_dyn)
 
-        # df2 = new Exp 2 (Fixed Coherence, from E1.pkl)
+        # df2 = Exp 2 (Fixed Coherence)
         exp2_model = (df2.assign(
             exp=2,
             Structure=lambda x: np.where(x['TransitionType'].isin(same_set), 'Same', 'Switch')
         ).rename(columns={
             'curDur': 'Duration', 'curBias': 'Bias', 'rpr': 'Reproduction',
             'curCoherence': 'coherence', 'subID': 'Sub'
-        }).astype({'coherence': float, 'Sub': int}))
+        }).astype({'coherence': float}))
+        exp2_model['Sub'] = exp2_model['Sub'].map(sub_map_fix)
 
         df_model = pd.concat([exp1_model, exp2_model], ignore_index=True)[[
             'Sub', 'exp', 'trial_num', 'coherence', 'Structure',
@@ -764,7 +757,6 @@ def plot_figC1_model_comparison(results_df, C_AXIS, S_AXIS, B_AXIS, compare_axes
     plt.tight_layout()
     plt.savefig(FIG_DIR / 'figC1_model_comparison.png', dpi=300, bbox_inches='tight')
     plt.savefig(FIG_DIR / 'figC1_model_comparison.pdf', bbox_inches='tight')
-    plt.close()
     print(f"Saved figC1_model_comparison")
 
 
@@ -903,7 +895,6 @@ def plot_fig7_parameters(results_df, get_best_model):
     plt.tight_layout()
     plt.savefig(FIG_DIR / 'fig7_parameters.png', dpi=300, bbox_inches='tight')
     plt.savefig(FIG_DIR / 'fig7_parameters.pdf', bbox_inches='tight')
-    plt.close()
 
     # Print summary
     print("\n" + "=" * 60)
@@ -1060,7 +1051,6 @@ def plot_figC2_cti_sdi_recovery(df_model, results_df, best_exp1, best_exp2,
     plt.tight_layout()
     plt.savefig(FIG_DIR / 'figC2_cti_sdi_recovery.png', dpi=300, bbox_inches='tight')
     plt.savefig(FIG_DIR / 'figC2_cti_sdi_recovery.pdf', bbox_inches='tight')
-    plt.close()
     print(f"\nSaved figC2_cti_sdi_recovery")
 
     return ppc_results
@@ -1168,7 +1158,6 @@ def plot_fig8_trial_level_sd(df_model, results_df, best_exp1, best_exp2,
     plt.tight_layout()
     plt.savefig(FIG_DIR / 'fig8_trial_level_sd.png', dpi=300, bbox_inches='tight')
     plt.savefig(FIG_DIR / 'fig8_trial_level_sd.pdf', bbox_inches='tight')
-    plt.close()
     print(f"Saved fig8_trial_level_sd")
 
 

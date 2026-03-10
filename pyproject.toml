@@ -28,6 +28,7 @@ dependencies = [
 
     # Additional utilities
     "tqdm>=4.65.0",
+    "python-docx>=1.2.0",
 ]
 
 [project.optional-dependencies]
