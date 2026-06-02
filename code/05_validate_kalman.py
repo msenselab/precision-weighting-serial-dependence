@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
@@ -352,14 +351,8 @@ def main():
         rec_summary = summarize_parameter_recovery(rec)
         rec_summary.to_csv(out_dir / "winner_parameter_recovery_summary.csv", index=False)
 
-    summary = {
-        "winner_models": winner_models,
-        "ppc": metric_summary.to_dict(orient="records"),
-        "behavioral_effect_contrasts": effect_contrasts.to_dict(orient="records"),
-        "parameter_recovery_n_sims": 0 if args.skip_parameter_recovery else args.n_sims,
-    }
-    (out_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
-
+    # Console-only summary (no summary.md / summary.json are written; the CSV
+    # outputs above are the canonical machine-readable artifacts).
     lines = ["# Kalman Model Validation", ""]
     lines.append("Winner models:")
     for exp, info in winner_models.items():
@@ -389,7 +382,6 @@ def main():
             lines.append(f"- {label}: {vals}")
     lines.append("")
     lines.append(f"All outputs are in `{display_path(out_dir)}`.")
-    (out_dir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     print("\n".join(lines))
 
