@@ -55,19 +55,17 @@ uv run python code/02_run_behavioral_models.py
 uv run python code/03_prepare_behavioral_results.py
 ```
 
-Run the Kalman-model checks from the included canonical fit outputs:
+Run the Kalman-model consistency checks from the included canonical fit outputs:
 
 ```bash
 uv run python code/05_validate_kalman_model.py --skip-parameter-recovery
 ```
 
-The exported files in `figures/` are the canonical manuscript figures. The plotting scripts in `code/06_plot_behavior_figures.py` and `code/07_plot_kalman_figures.py` are retained for inspecting the public source-data tables, but the manuscript figures should be treated as the authoritative exported assets.
+The exported files in `figures/` are the canonical manuscript figures. The plotting scripts in `code/06_plot_behavior_figures.py` and `code/07_plot_kalman_figures.py` are retained for inspecting public source-data tables and saved model outputs, but the manuscript figures should be treated as the authoritative exported assets.
 
-Full Kalman model fitting is computationally expensive. Canonical fit outputs are included in `results/kalman_model_fits/`, so readers can inspect the final model results without rerunning the full grid search. To rerun the full fit:
+Full Kalman model fitting/filtering is computationally expensive and is **not required** for the public release. Canonical fit outputs are included in `results/kalman_model_fits/`, and saved PPC/trial-level prediction outputs are included in `results/kalman_model_checks/`, so readers and notebooks can inspect the final model results without rerunning the Kalman filter.
 
-```bash
-uv run python code/04_fit_kalman_models.py --workers 1
-```
+`code/04_fit_kalman_models.py` is retained only as methodological source code for the original fitting procedure; it is not part of the recommended public reproduction path.
 
 `code/01_preprocess_data.py` documents the preprocessing logic used to create the cleaned data. It expects the original raw experiment CSV folders, which are not included in this public repository.
 
