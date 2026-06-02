@@ -114,6 +114,21 @@ def check_model_outputs() -> None:
         if n != expected:
             fail(f"Experiment {exp} fit count mismatch: {n} != {expected}")
 
+    summary = (ROOT / "results" / "figure_source_data" / "kalman_results_summary.md").read_text()
+    for exp, expected_model in EXPECTED_WINNERS.items():
+        expected_line = f"Experiment {exp}: winner `{expected_model}`"
+        if expected_line not in summary:
+            fail(f"Kalman source-data summary missing: {expected_line}")
+
+    parameter_summary = pd.read_csv(
+        ROOT / "results" / "figure_source_data" / "kalman_winner_parameter_summary.csv",
+        header=[0, 1],
+        index_col=0,
+    )
+    for experiment in ["Experiment 1", "Experiment 2"]:
+        if experiment not in parameter_summary.index:
+            fail(f"Kalman parameter summary missing {experiment}")
+
 
 def check_readme() -> None:
     text = (ROOT / "README.md").read_text()
