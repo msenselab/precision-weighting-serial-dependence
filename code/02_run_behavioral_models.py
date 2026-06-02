@@ -15,8 +15,8 @@ from scipy import stats
 
 ROOT = Path(__file__).resolve().parents[1]
 DATASETS = {
-    "experiment1_dynamic": ROOT / "data" / "experiment2" / "E2.pkl",
-    "experiment2_fixed": ROOT / "data" / "experiment1" / "E1.pkl",
+    "experiment1": ROOT / "data" / "experiment1" / "E1.pkl",
+    "experiment2": ROOT / "data" / "experiment2" / "E2.pkl",
 }
 OUTDIR = ROOT / "results" / "behavioral_models"
 OUTDIR.mkdir(parents=True, exist_ok=True)
@@ -97,14 +97,14 @@ def run_main_lmms(datasets: dict[str, pd.DataFrame]) -> tuple[pd.DataFrame, pd.D
     tables = []
     key = []
 
-    df1 = datasets["experiment1_dynamic"]
+    df1 = datasets["experiment1"]
     formula1 = "curBias ~ curDur_c + preDur_c * current_high_uncertainty"
     res1, method1 = fit_mixedlm(df1, formula1, "~curDur_c + preDur_c")
-    tables.append(param_table(res1, "experiment1_dynamic", "main_current_uncertainty", formula1, method1))
+    tables.append(param_table(res1, "experiment1", "main_current_uncertainty", formula1, method1))
     high_slope, high_se = simple_slope(res1, "preDur_c", "preDur_c:current_high_uncertainty")
     key.append(
         {
-            "dataset": "experiment1_dynamic",
+            "dataset": "experiment1",
             "question": "current uncertainty moderation",
             "n_obs": int(res1.nobs),
             "n_subjects": int(df1["subID"].nunique()),
@@ -124,14 +124,14 @@ def run_main_lmms(datasets: dict[str, pd.DataFrame]) -> tuple[pd.DataFrame, pd.D
         }
     )
 
-    df2 = datasets["experiment2_fixed"]
+    df2 = datasets["experiment2"]
     formula2 = "curBias ~ curDur_c + preDur_c * same_transition"
     res2, method2 = fit_mixedlm(df2, formula2, "~curDur_c + preDur_c")
-    tables.append(param_table(res2, "experiment2_fixed", "main_same_switch", formula2, method2))
+    tables.append(param_table(res2, "experiment2", "main_same_switch", formula2, method2))
     same_slope, same_se = simple_slope(res2, "preDur_c", "preDur_c:same_transition")
     key.append(
         {
-            "dataset": "experiment2_fixed",
+            "dataset": "experiment2",
             "question": "same/switch moderation",
             "n_obs": int(res2.nobs),
             "n_subjects": int(df2["subID"].nunique()),
@@ -263,8 +263,8 @@ def run_subject_slope_checks(datasets: dict[str, pd.DataFrame]) -> tuple[pd.Data
 
     contrasts = []
     checks = [
-        ("experiment1_dynamic", "current_uncertainty", "HighUncertainty", "LowUncertainty"),
-        ("experiment2_fixed", "SameSwitch", "Same", "Switch"),
+        ("experiment1", "current_uncertainty", "HighUncertainty", "LowUncertainty"),
+        ("experiment2", "SameSwitch", "Same", "Switch"),
     ]
     for dataset, grouping, a, b in checks:
         d = slopes[(slopes["dataset"].eq(dataset)) & (slopes["grouping"].eq(grouping))]
@@ -284,8 +284,8 @@ def run_subject_slope_checks(datasets: dict[str, pd.DataFrame]) -> tuple[pd.Data
 
 def run_response_history_lmms(datasets: dict[str, pd.DataFrame]) -> pd.DataFrame:
     specs = {
-        "experiment1_dynamic": "curBias ~ curDur_c + preDur_c * curCoherence + preResp_long",
-        "experiment2_fixed": "curBias ~ curDur_c + preDur_c + preResp_long * same_transition + curCoherence",
+        "experiment1": "curBias ~ curDur_c + preDur_c * curCoherence + preResp_long",
+        "experiment2": "curBias ~ curDur_c + preDur_c + preResp_long * same_transition + curCoherence",
     }
     tables = []
     for dataset, formula in specs.items():

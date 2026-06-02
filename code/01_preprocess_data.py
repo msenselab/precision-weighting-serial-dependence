@@ -44,13 +44,13 @@ class ExperimentConfig:
 EXPERIMENTS = [
     ExperimentConfig(
         exp_num=1,
-        rawdata_dir=ROOT / "Experiment1" / "rawdata",
+        rawdata_dir=ROOT / "raw" / "experiment1",
         output_name="E1.pkl",
         max_n_future=MAX_N_FUTURE_EXP2,
     ),
     ExperimentConfig(
         exp_num=2,
-        rawdata_dir=ROOT / "Experiment2" / "rawdata",
+        rawdata_dir=ROOT / "raw" / "experiment2",
         output_name="E2.pkl",
         max_n_future=MAX_N_FUTURE_EXP2,
     ),

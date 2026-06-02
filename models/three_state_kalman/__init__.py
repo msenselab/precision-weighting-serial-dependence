@@ -57,4 +57,4 @@ __all__ = [
     'compute_ppc_metrics',
 ]
 
-__version__ = '1.0.0'
+__version__ = '1.0.0-nolog'

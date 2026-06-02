@@ -192,8 +192,8 @@ def summarize_effect_recovery(effects):
 
     contrast_rows = []
     contrasts = [
-        (2, "current_uncertainty", "HighUncertainty", "LowUncertainty", "Exp1 dynamic High-Low"),
-        (1, "SameSwitch", "Repeat", "Switch", "Exp2 fixed Same-Switch"),
+        (1, "current_uncertainty", "HighUncertainty", "LowUncertainty", "Experiment 1 High-Low"),
+        (2, "SameSwitch", "Repeat", "Switch", "Experiment 2 Same-Switch"),
     ]
     for exp, grouping, a, b, label in contrasts:
         wide = effects[(effects["exp"] == exp) & (effects["grouping"] == grouping)].pivot_table(
@@ -363,12 +363,12 @@ def main():
     lines = ["# Kalman Model Validation", ""]
     lines.append("Winner models:")
     for exp, info in winner_models.items():
-        label = "Code Experiment 1 / displayed Experiment 2 fixed" if exp == 1 else "Code Experiment 2 / displayed Experiment 1 dynamic"
+        label = f"Experiment {exp}"
         lines.append(f"- {label}: `{info['model_id']}` / `{info['model_name']}`")
     lines.append("")
     lines.append("## PPC subject-level CTI/SDI recovery")
     for row in metric_summary.to_dict(orient="records"):
-        label = "Code Experiment 1 / displayed Experiment 2 fixed" if row["exp"] == 1 else "Code Experiment 2 / displayed Experiment 1 dynamic"
+        label = f"Experiment {int(row['exp'])}"
         lines.append(
             f"- {label}: CTI r={row['cti_r']:.3f}, SDI r={row['sdi_r']:.3f}, "
             f"mean RMSE={row['rmse_mean']:.4f}"
@@ -384,7 +384,7 @@ def main():
         lines.append("")
         lines.append(f"## Parameter recovery ({args.n_sims} simulations per subject)")
         for exp, d in rec_summary.groupby("exp", sort=True):
-            label = "Code Experiment 1 / displayed Experiment 2 fixed" if exp == 1 else "Code Experiment 2 / displayed Experiment 1 dynamic"
+            label = f"Experiment {exp}"
             vals = ", ".join(f"{r.parameter}: r={r.r:.2f}" for r in d.itertuples())
             lines.append(f"- {label}: {vals}")
     lines.append("")

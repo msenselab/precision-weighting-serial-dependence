@@ -20,13 +20,13 @@ READY_DIR.mkdir(parents=True, exist_ok=True)
 
 WINNER = "C1_S0_B2"
 CODE_TO_DISPLAY = {
-    2: "Experiment 1 dynamic",
-    1: "Experiment 2 fixed",
+    1: "Experiment 1",
+    2: "Experiment 2",
 }
-FIGURE_ORDER = ["Experiment 1 dynamic", "Experiment 2 fixed"]
+FIGURE_ORDER = ["Experiment 1", "Experiment 2"]
 COLORS = {
-    "Experiment 1 dynamic": "#4A9F79",
-    "Experiment 2 fixed": "#5B7C99",
+    "Experiment 1": "#4A9F79",
+    "Experiment 2": "#5B7C99",
     "Observed": "#222222",
     "Predicted": "#8A6F3D",
 }
@@ -122,8 +122,8 @@ def figure7_trial_level_ppc():
     df = prepare_ppc_trials()
     fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.4), constrained_layout=True, sharey=False)
     specs = [
-        ("Experiment 1 dynamic", ["High", "Low"], "Current coherence"),
-        ("Experiment 2 fixed", ["Switch", "Same"], "Transition"),
+        ("Experiment 1", ["High", "Low"], "Current coherence"),
+        ("Experiment 2", ["Switch", "Same"], "Transition"),
     ]
     for ax, (experiment, conditions, legend_title) in zip(axes, specs):
         dd = df[df["display_experiment"].eq(experiment)].dropna(subset=["preDur1back"])

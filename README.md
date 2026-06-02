@@ -48,22 +48,22 @@ Install dependencies with `uv`:
 uv sync
 ```
 
-Run the behavioral pipeline:
+Run the behavioral tables/source-data pipeline:
 
 ```bash
 uv run python code/02_run_behavioral_models.py
 uv run python code/03_prepare_behavioral_results.py
-uv run python code/06_plot_behavior_figures.py
 ```
 
-Run the Kalman-model checks and figures from the included canonical fit outputs:
+Run the Kalman-model checks from the included canonical fit outputs:
 
 ```bash
 uv run python code/05_validate_kalman_model.py --skip-parameter-recovery
-uv run python code/07_plot_kalman_figures.py
 ```
 
-Full Kalman model fitting is computationally expensive. Canonical fit outputs are included in `results/kalman_model_fits/`, so readers can inspect or plot the final model results without rerunning the full grid search. To rerun the full fit:
+The exported files in `figures/` are the canonical manuscript figures. The plotting scripts in `code/06_plot_behavior_figures.py` and `code/07_plot_kalman_figures.py` are retained for inspecting the public source-data tables, but the manuscript figures should be treated as the authoritative exported assets.
+
+Full Kalman model fitting is computationally expensive. Canonical fit outputs are included in `results/kalman_model_fits/`, so readers can inspect the final model results without rerunning the full grid search. To rerun the full fit:
 
 ```bash
 uv run python code/04_fit_kalman_models.py --workers 1

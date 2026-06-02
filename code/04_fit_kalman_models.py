@@ -405,7 +405,7 @@ def summarize(results: pd.DataFrame) -> None:
 
     lines = ["# Three-State Kalman Model Fits", ""]
     for exp_num, d in rank.groupby("exp"):
-        lines.append(f"## Code Experiment {exp_num}")
+        lines.append(f"## Experiment {exp_num}")
         for _, r in d.head(15).iterrows():
             lines.append(
                 f"- {r['model_name']}: mean AIC={r['mean_AIC']:.3f}, "

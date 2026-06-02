@@ -28,13 +28,13 @@ COLORS = {
 }
 
 DATASETS = {
-    "experiment1_dynamic": DATA_DIR / "experiment2" / "E2.pkl",
-    "experiment2_fixed": DATA_DIR / "experiment1" / "E1.pkl",
+    "experiment1": DATA_DIR / "experiment1" / "E1.pkl",
+    "experiment2": DATA_DIR / "experiment2" / "E2.pkl",
 }
 
 DISPLAY = {
-    "experiment1_dynamic": "Experiment 1",
-    "experiment2_fixed": "Experiment 2",
+    "experiment1": "Experiment 1",
+    "experiment2": "Experiment 2",
 }
 
 
@@ -159,7 +159,7 @@ def draw_slope_bar(ax, slopes: pd.DataFrame, dataset: str, grouping: str, condit
 def figure2(datasets: dict[str, pd.DataFrame], slopes: pd.DataFrame):
     fig, axes = plt.subplots(3, 2, figsize=(7.2, 8.4), constrained_layout=True)
 
-    for col, dataset in enumerate(["experiment1_dynamic", "experiment2_fixed"]):
+    for col, dataset in enumerate(["experiment1", "experiment2"]):
         df = datasets[dataset]
         cur_summary = participant_mean_summary(df, ["curDur"], "curBias")
         draw_line_panel(
@@ -172,7 +172,7 @@ def figure2(datasets: dict[str, pd.DataFrame], slopes: pd.DataFrame):
         )
 
     exp1_prev = participant_mean_summary(
-        datasets["experiment1_dynamic"], ["preDur1back", "current_coherence_label"], "curBias"
+        datasets["experiment1"], ["preDur1back", "current_coherence_label"], "curBias"
     )
     draw_line_panel(
         axes[1, 0],
@@ -185,7 +185,7 @@ def figure2(datasets: dict[str, pd.DataFrame], slopes: pd.DataFrame):
     axes[1, 0].legend(frameon=False, title="Current coherence", fontsize=8, title_fontsize=8, loc="lower right")
 
     exp2_prev = participant_mean_summary(
-        datasets["experiment2_fixed"], ["preDur1back", "same_switch_label"], "curBias"
+        datasets["experiment2"], ["preDur1back", "same_switch_label"], "curBias"
     )
     draw_line_panel(
         axes[1, 1],
@@ -200,7 +200,7 @@ def figure2(datasets: dict[str, pd.DataFrame], slopes: pd.DataFrame):
     draw_slope_bar(
         axes[2, 0],
         slopes,
-        "experiment1_dynamic",
+        "experiment1",
         "current_coherence_label",
         ["High", "Low"],
         "E. Experiment 1 controlled slopes",
@@ -208,7 +208,7 @@ def figure2(datasets: dict[str, pd.DataFrame], slopes: pd.DataFrame):
     draw_slope_bar(
         axes[2, 1],
         slopes,
-        "experiment2_fixed",
+        "experiment2",
         "same_switch_label",
         ["Switch", "Same"],
         "F. Experiment 2 controlled slopes",
@@ -228,7 +228,7 @@ def figure3(slopes: pd.DataFrame):
     for ax, (grouping, conditions, title) in zip(axes, panel_specs):
         x_centers = np.arange(2)
         width = 0.33
-        for j, dataset in enumerate(["experiment1_dynamic", "experiment2_fixed"]):
+        for j, dataset in enumerate(["experiment1", "experiment2"]):
             dd = slopes[(slopes["dataset"].eq(dataset)) & (slopes["grouping"].eq(grouping))]
             vals, errs = [], []
             for cond in conditions:
@@ -266,7 +266,7 @@ def temporal_window(datasets: dict[str, pd.DataFrame]) -> pd.DataFrame:
         for lag, predictor in lag_specs:
             if predictor not in df.columns:
                 continue
-            if dataset == "experiment1_dynamic":
+            if dataset == "experiment1":
                 df["lag_condition"] = df["current_coherence_label"]
             else:
                 if lag < 0:
@@ -314,8 +314,8 @@ def temporal_window(datasets: dict[str, pd.DataFrame]) -> pd.DataFrame:
 def figure4(summary: pd.DataFrame):
     fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.4), constrained_layout=True, sharey=True)
     specs = [
-        ("experiment1_dynamic", ["High", "Low"], "A. Experiment 1"),
-        ("experiment2_fixed", ["Switch", "Same"], "B. Experiment 2"),
+        ("experiment1", ["High", "Low"], "A. Experiment 1"),
+        ("experiment2", ["Switch", "Same"], "B. Experiment 2"),
     ]
     x_order = [-3, -2, -1, 1, 2]
     labels = ["n-3", "n-2", "n-1", "n+1", "n+2"]
@@ -362,8 +362,8 @@ def figure_a1():
     params["lag"] = params["parameter"].str.extract(r"(\d+)").astype(int)
     fig, ax = plt.subplots(figsize=(5.6, 3.4), constrained_layout=True)
     for dataset, color, x_offset in [
-        ("experiment1_dynamic", COLORS["Exp1"], -0.10),
-        ("experiment2_fixed", COLORS["Exp2"], 0.10),
+        ("experiment1", COLORS["Exp1"], -0.10),
+        ("experiment2", COLORS["Exp2"], 0.10),
     ]:
         dd = params[params["dataset"].eq(dataset)].sort_values("lag")
         x = dd["lag"].astype(float) + x_offset

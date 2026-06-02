@@ -16,15 +16,15 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 ROOT = Path(__file__).resolve().parents[1]
 DATASETS = {
-    "experiment1_dynamic": ROOT / "data" / "experiment2" / "E2.pkl",
-    "experiment2_fixed": ROOT / "data" / "experiment1" / "E1.pkl",
+    "experiment1": ROOT / "data" / "experiment1" / "E1.pkl",
+    "experiment2": ROOT / "data" / "experiment2" / "E2.pkl",
 }
 OUTDIR = ROOT / "results" / "figure_source_data"
 OUTDIR.mkdir(parents=True, exist_ok=True)
 
 DISPLAY = {
-    "experiment1_dynamic": "Experiment 1 dynamic",
-    "experiment2_fixed": "Experiment 2 fixed",
+    "experiment1": "Experiment 1",
+    "experiment2": "Experiment 2",
 }
 
 
@@ -107,13 +107,13 @@ def dual_lmms(datasets: dict[str, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataF
     slope_rows = []
 
     specs = {
-        "experiment1_dynamic": {
+        "experiment1": {
             "formula": "curBias ~ curDur_c * current_low_coherence + preDur_c * current_low_coherence",
             "moderator": "current_low_coherence",
             "reference": "High coherence",
             "moderated": "Low coherence",
         },
-        "experiment2_fixed": {
+        "experiment2": {
             "formula": "curBias ~ curDur_c * same_transition + preDur_c * same_transition",
             "moderator": "same_transition",
             "reference": "Switch",
@@ -191,10 +191,10 @@ def subject_slopes(datasets: dict[str, pd.DataFrame]) -> tuple[pd.DataFrame, pd.
 
     slopes = pd.DataFrame(rows)
     contrast_specs = [
-        ("experiment1_dynamic", "current_coherence_label", "Low", "High"),
-        ("experiment2_fixed", "same_switch_label", "Same", "Switch"),
-        ("experiment1_dynamic", "same_switch_label", "Same", "Switch"),
-        ("experiment2_fixed", "current_coherence_label", "Low", "High"),
+        ("experiment1", "current_coherence_label", "Low", "High"),
+        ("experiment2", "same_switch_label", "Same", "Switch"),
+        ("experiment1", "same_switch_label", "Same", "Switch"),
+        ("experiment2", "current_coherence_label", "Low", "High"),
     ]
     contrasts = []
     for dataset, grouping, a, b in contrast_specs:
