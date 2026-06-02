@@ -1,0 +1,15 @@
+dataset,n,predictor,vif
+experiment1_dynamic,2936,curDur_c,1.0018103814428347
+experiment1_dynamic,2936,preDur_c,1.2917373710647633
+experiment1_dynamic,2936,response_error_lag1,1.5587900957482663
+experiment1_dynamic,2936,response_error_lag2,1.2333303906253423
+experiment1_dynamic,2936,response_error_lag3,1.238561411320449
+experiment1_dynamic,2936,response_error_lag4,1.2170364598407386
+experiment1_dynamic,2936,response_error_lag5,1.19818268483202
+experiment2_fixed,2771,curDur_c,1.0009222990172308
+experiment2_fixed,2771,preDur_c,1.4019472311083059
+experiment2_fixed,2771,response_error_lag1,1.4516156536224685
+experiment2_fixed,2771,response_error_lag2,1.0363719371767748
+experiment2_fixed,2771,response_error_lag3,1.0426841344267055
+experiment2_fixed,2771,response_error_lag4,1.0468900211285415
+experiment2_fixed,2771,response_error_lag5,1.041752601041723

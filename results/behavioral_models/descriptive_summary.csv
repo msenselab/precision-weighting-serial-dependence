@@ -1,0 +1,3 @@
+dataset,n_subjects,n_trials,trials_per_subject_min,trials_per_subject_mean,trials_per_subject_max,mean_bias,sd_bias
+experiment1_dynamic,22,4693,188,213.3181818181818,230,0.08651097379075218,0.26310005450329255
+experiment2_fixed,22,4654,186,211.54545454545453,230,-0.016102170175999138,0.2584602212154235

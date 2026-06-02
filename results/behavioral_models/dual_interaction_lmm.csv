@@ -1,0 +1,9 @@
+dataset,formula,parameter,beta,se,z,p,n_obs,n_subjects,converged,method
+experiment1_dynamic,curBias ~ curDur_c * current_low_coherence + preDur_c * current_low_coherence,curDur_c,-0.38785518888666554,0.041450311905527226,-9.357111468079125,8.194631362529574e-21,4692,22,True,lbfgs
+experiment1_dynamic,curBias ~ curDur_c * current_low_coherence + preDur_c * current_low_coherence,curDur_c:current_low_coherence,0.013635211072654032,0.02038701596447775,0.6688183840348174,0.5036113380443812,4692,22,True,lbfgs
+experiment1_dynamic,curBias ~ curDur_c * current_low_coherence + preDur_c * current_low_coherence,preDur_c,0.020083442402954635,0.014364909007517156,1.398090471192332,0.16208590095058173,4692,22,True,lbfgs
+experiment1_dynamic,curBias ~ curDur_c * current_low_coherence + preDur_c * current_low_coherence,preDur_c:current_low_coherence,0.04207947583460348,0.020096086400542112,2.0939139589620965,0.036267645561258596,4692,22,True,lbfgs
+experiment2_fixed,curBias ~ curDur_c * same_transition + preDur_c * same_transition,curDur_c,-0.49395927451053095,0.03549259847028831,-13.917247420586461,4.97705360197429e-44,4638,22,True,lbfgs
+experiment2_fixed,curBias ~ curDur_c * same_transition + preDur_c * same_transition,curDur_c:same_transition,-0.004245330846716799,0.02168409488387405,-0.19578086470530764,0.8447816879795016,4638,22,True,lbfgs
+experiment2_fixed,curBias ~ curDur_c * same_transition + preDur_c * same_transition,preDur_c,0.07600243245581877,0.01761748113294842,4.314035126944346,1.6030145929301602e-05,4638,22,True,lbfgs
+experiment2_fixed,curBias ~ curDur_c * same_transition + preDur_c * same_transition,preDur_c:same_transition,0.02539309610479798,0.02136073672587623,1.1887743587999464,0.2345284706391817,4638,22,True,lbfgs

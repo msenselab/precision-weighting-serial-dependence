@@ -1,0 +1,5 @@
+exp,source,grouping,contrast,mean_diff,sem_diff,n_subjects
+2,Reproduction,current_uncertainty,Exp1 dynamic High-Low,0.04063954904914371,0.016780805751612508,22
+2,pred,current_uncertainty,Exp1 dynamic High-Low,0.0030516886189806583,0.005041684443009821,22
+1,Reproduction,SameSwitch,Exp2 fixed Same-Switch,0.0404150213501846,0.013076225362385731,22
+1,pred,SameSwitch,Exp2 fixed Same-Switch,0.007211633201514304,0.00359329251862866,22

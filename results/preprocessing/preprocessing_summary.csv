@@ -1,0 +1,3 @@
+Experiment,raw_subjects,raw_rows,included_subjects,analysis_rows,final_outliers,valid_analysis_rows,valid_trials_min,valid_trials_mean,valid_trials_max,output
+1,42,10051,22,5280,626,4654,186,211.54545454545453,230,data/experiment1/E1.pkl
+2,71,17041,22,5280,587,4693,188,213.3181818181818,230,data/experiment2/E2.pkl

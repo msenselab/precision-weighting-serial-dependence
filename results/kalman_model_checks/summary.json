@@ -1,0 +1,85 @@
+{
+  "winner_models": {
+    "1": {
+      "model_id": "C1_S0_B2",
+      "model_name": "C_Q1__S_baseline__B_B2"
+    },
+    "2": {
+      "model_id": "C1_S0_B2",
+      "model_name": "C_Q1__S_baseline__B_B2"
+    }
+  },
+  "ppc": [
+    {
+      "exp": 1,
+      "model_id": "C1_S0_B2",
+      "model_name": "C_Q1__S_baseline__B_B2",
+      "cti_r": 0.9945529659609672,
+      "cti_p": 4.057053796490931e-21,
+      "sdi_r": 0.9489488504453083,
+      "sdi_p": 1.7565419533029945e-11,
+      "cti_mean_obs": 0.5101792568691114,
+      "cti_mean_pred": 0.5156219155215971,
+      "sdi_mean_obs": 0.11009880739489443,
+      "sdi_mean_pred": 0.10695748053912534,
+      "rmse_mean": 0.1995872902598604,
+      "mae_mean": 0.15979997758659567,
+      "n_subjects": 22
+    },
+    {
+      "exp": 2,
+      "model_id": "C1_S0_B2",
+      "model_name": "C_Q1__S_baseline__B_B2",
+      "cti_r": 0.9956123747777391,
+      "cti_p": 4.68588105135779e-22,
+      "sdi_r": 0.7513379053397566,
+      "sdi_p": 5.569111795486529e-05,
+      "cti_mean_obs": 0.6199189119011734,
+      "cti_mean_pred": 0.6131441191048447,
+      "sdi_mean_obs": 0.06645375111872406,
+      "sdi_mean_pred": 0.06630725807910459,
+      "rmse_mean": 0.18251563922180747,
+      "mae_mean": 0.1470770889215283,
+      "n_subjects": 22
+    }
+  ],
+  "behavioral_effect_contrasts": [
+    {
+      "exp": 2,
+      "source": "Reproduction",
+      "grouping": "current_uncertainty",
+      "contrast": "Exp1 dynamic High-Low",
+      "mean_diff": 0.04063954904914371,
+      "sem_diff": 0.016780805751612508,
+      "n_subjects": 22
+    },
+    {
+      "exp": 2,
+      "source": "pred",
+      "grouping": "current_uncertainty",
+      "contrast": "Exp1 dynamic High-Low",
+      "mean_diff": 0.0030516886189806583,
+      "sem_diff": 0.005041684443009821,
+      "n_subjects": 22
+    },
+    {
+      "exp": 1,
+      "source": "Reproduction",
+      "grouping": "SameSwitch",
+      "contrast": "Exp2 fixed Same-Switch",
+      "mean_diff": 0.0404150213501846,
+      "sem_diff": 0.013076225362385731,
+      "n_subjects": 22
+    },
+    {
+      "exp": 1,
+      "source": "pred",
+      "grouping": "SameSwitch",
+      "contrast": "Exp2 fixed Same-Switch",
+      "mean_diff": 0.007211633201514304,
+      "sem_diff": 0.00359329251862866,
+      "n_subjects": 22
+    }
+  ],
+  "parameter_recovery_n_sims": 0
+}

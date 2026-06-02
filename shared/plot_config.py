@@ -6,13 +6,16 @@ import seaborn as sns
 import numpy as np
 
 # Nature-style color palette
+# High/low now refer to objective motion coherence (not subjective uncertainty).
 COLORS = {
-    'high': '#E64B35',      # Red - High uncertainty/coherence
-    'low': '#4DBBD5',       # Blue - Low uncertainty/coherence
-    'HH': '#E64B35',        # High-High transition
-    'HL': '#F39B7F',        # High-Low transition
-    'LH': '#7E6148',        # Low-High transition
-    'LL': '#4DBBD5',        # Low-Low transition
+    'high': '#4DBBD5',      # Blue - high coherence / clearer stimulus
+    'low': '#E64B35',       # Red - low coherence / degraded stimulus
+    # TransitionType values are raw data codes from the old uncertainty notation:
+    # raw HH->display LL, raw HL->display LH, raw LH->display HL, raw LL->display HH.
+    'HH': '#E64B35',        # Display: low-low coherence transition
+    'HL': '#F39B7F',        # Display: low-high coherence transition
+    'LH': '#7E6148',        # Display: high-low coherence transition
+    'LL': '#4DBBD5',        # Display: high-high coherence transition
     'same': '#3C5488',      # Same condition
     'switch': '#F39B7F',    # Switch condition
     'exp1': '#00A087',      # Experiment 1
@@ -20,8 +23,15 @@ COLORS = {
     'neutral': '#666666',   # Neutral/control
 }
 
-# Transition type order and colors
+# Transition type order and colors. TRANSITION_ORDER is raw-data order; labels
+# are remapped for display so H/L denote objective coherence in figures.
 TRANSITION_ORDER = ['HH', 'HL', 'LH', 'LL']
+COHERENCE_TRANSITION_LABELS = {
+    'HH': 'LL',  # old high uncertainty -> low coherence on both trials
+    'HL': 'LH',  # old high->low uncertainty -> low->high coherence
+    'LH': 'HL',  # old low->high uncertainty -> high->low coherence
+    'LL': 'HH',  # old low uncertainty -> high coherence on both trials
+}
 TRANSITION_COLORS = [COLORS['HH'], COLORS['HL'], COLORS['LH'], COLORS['LL']]
 TRANSITION_PALETTE = dict(zip(TRANSITION_ORDER, TRANSITION_COLORS))
 
@@ -39,39 +49,39 @@ def set_nature_style():
         'savefig.bbox': 'tight',
         'savefig.transparent': False,
 
-        # Font - Nature uses Helvetica/Arial
+        # Font - Nature uses Helvetica/Arial. Sizes bumped for publication legibility.
         'font.family': 'sans-serif',
         'font.sans-serif': ['Arial', 'Helvetica', 'DejaVu Sans'],
-        'font.size': 10,
-        'axes.labelsize': 10,
-        'axes.titlesize': 10,
-        'xtick.labelsize': 10,
-        'ytick.labelsize': 10,
-        'legend.fontsize': 9,
+        'font.size': 12,
+        'axes.labelsize': 13,
+        'axes.titlesize': 14,
+        'xtick.labelsize': 12,
+        'ytick.labelsize': 12,
+        'legend.fontsize': 12,
 
         # Axes
-        'axes.linewidth': 0.8,
+        'axes.linewidth': 1.0,
         'axes.spines.top': False,
         'axes.spines.right': False,
-        'axes.labelpad': 4,
-        'axes.titlepad': 8,
+        'axes.labelpad': 5,
+        'axes.titlepad': 10,
 
         # Ticks
-        'xtick.major.width': 0.8,
-        'ytick.major.width': 0.8,
-        'xtick.major.size': 3,
-        'ytick.major.size': 3,
+        'xtick.major.width': 1.0,
+        'ytick.major.width': 1.0,
+        'xtick.major.size': 4,
+        'ytick.major.size': 4,
         'xtick.direction': 'out',
         'ytick.direction': 'out',
 
         # Lines
-        'lines.linewidth': 1.2,
-        'lines.markersize': 4,
+        'lines.linewidth': 1.4,
+        'lines.markersize': 5,
 
         # Legend
         'legend.frameon': False,
-        'legend.borderpad': 0.2,
-        'legend.labelspacing': 0.3,
+        'legend.borderpad': 0.3,
+        'legend.labelspacing': 0.35,
 
         # Grid (off by default for Nature)
         'axes.grid': False,
