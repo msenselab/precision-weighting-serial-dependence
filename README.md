@@ -19,6 +19,7 @@ This repository contains the public analysis code, cleaned data, fitted model ou
 │   └── 07_plot_kalman_figures.py
 ├── models/three_state_kalman/    # Three-state Kalman model implementation
 ├── notebooks/                    # Saved-output analysis records for inspection
+│   └── shared/                   # Notebook-local plotting configuration
 ├── results/                      # Canonical output tables
 │   ├── preprocessing/
 │   ├── behavioral_models/
@@ -26,7 +27,6 @@ This repository contains the public analysis code, cleaned data, fitted model ou
 │   ├── kalman_model_fits/
 │   └── kalman_model_checks/
 ├── figures/                      # Final figures in PDF/PNG, with SVG where available
-├── shared/                       # Shared plotting configuration used by archived notebooks
 ├── pyproject.toml
 └── uv.lock
 ```
