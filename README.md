@@ -10,13 +10,13 @@ This repository contains the public analysis code, cleaned data, fitted model ou
 │   ├── experiment1/E1.pkl
 │   └── experiment2/E2.pkl
 ├── code/                         # Scripted reproduction pipeline
-│   ├── 01_preprocess_data.py
-│   ├── 02_run_behavioral_models.py
-│   ├── 03_prepare_behavioral_results.py
-│   ├── 04_fit_kalman_models.py
-│   ├── 05_validate_kalman_model.py
-│   ├── 06_plot_behavior_figures.py
-│   └── 07_plot_kalman_figures.py
+│   ├── 01_preprocess.py
+│   ├── 02_behavior_models.py
+│   ├── 03_behavior_results.py
+│   ├── 04_fit_kalman.py
+│   ├── 05_validate_kalman.py
+│   ├── 06_plot_behavior.py
+│   └── 07_plot_kalman.py
 ├── models/three_state_kalman/    # Three-state Kalman model implementation
 ├── notebooks/                    # Saved-output analysis records for inspection
 │   └── shared/                   # Notebook-local plotting configuration
@@ -51,23 +51,23 @@ uv sync
 Run the behavioral tables/source-data pipeline:
 
 ```bash
-uv run python code/02_run_behavioral_models.py
-uv run python code/03_prepare_behavioral_results.py
+uv run python code/02_behavior_models.py
+uv run python code/03_behavior_results.py
 ```
 
 Run the Kalman-model consistency checks from the included canonical fit outputs:
 
 ```bash
-uv run python code/05_validate_kalman_model.py --skip-parameter-recovery
+uv run python code/05_validate_kalman.py --skip-parameter-recovery
 ```
 
-The exported files in `figures/` are the canonical manuscript figures. The plotting scripts in `code/06_plot_behavior_figures.py` and `code/07_plot_kalman_figures.py` are retained for inspecting public source-data tables and saved model outputs, but the manuscript figures should be treated as the authoritative exported assets.
+The exported files in `figures/` are the canonical manuscript figures. The plotting scripts in `code/06_plot_behavior.py` and `code/07_plot_kalman.py` are retained for inspecting public source-data tables and saved model outputs, but the manuscript figures should be treated as the authoritative exported assets.
 
 Full Kalman model fitting/filtering is computationally expensive and is **not required** for the public release. Canonical fit outputs are included in `results/kalman_model_fits/`, and saved PPC/trial-level prediction outputs are included in `results/kalman_model_checks/`, so readers and notebooks can inspect the final model results without rerunning the Kalman filter.
 
-`code/04_fit_kalman_models.py` is retained only as methodological source code for the original fitting procedure; it is not part of the recommended public reproduction path.
+`code/04_fit_kalman.py` is retained only as methodological source code for the original fitting procedure; it is not part of the recommended public reproduction path.
 
-`code/01_preprocess_data.py` documents the preprocessing logic used to create the cleaned data. It expects the original raw experiment CSV folders, which are not included in this public repository.
+`code/01_preprocess.py` documents the preprocessing logic used to create the cleaned data. It expects the original raw experiment CSV folders, which are not included in this public repository.
 
 ## Notebooks
 

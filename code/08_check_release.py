@@ -61,8 +61,8 @@ def check_notebooks() -> None:
     for path in notebooks.glob("*.ipynb"):
         json.loads(path.read_text())
 
-    main_text = (notebooks / "figures_main_analysis_record.ipynb").read_text()
-    appendix_text = (notebooks / "figures_appendix_analysis_record.ipynb").read_text()
+    main_text = (notebooks / "fig_main.ipynb").read_text()
+    appendix_text = (notebooks / "fig_appendix.ipynb").read_text()
 
     for stem in MAIN_NOTEBOOK_STEMS:
         if stem not in main_text:
