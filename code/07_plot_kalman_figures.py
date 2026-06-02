@@ -18,10 +18,7 @@ READY_DIR = ROOT / "results" / "figure_source_data"
 FIG_DIR = ROOT / "figures"
 READY_DIR.mkdir(parents=True, exist_ok=True)
 
-WINNERS = {
-    1: "C1_S0_B2",
-    2: "C1_S1_B2",
-}
+WINNER = "C1_S0_B2"
 CODE_TO_DISPLAY = {
     1: "Experiment 1",
     2: "Experiment 2",
@@ -57,12 +54,8 @@ def load_valid_data(code_exp: int) -> pd.DataFrame:
 
 def figure6_parameter_estimates():
     fits = pd.read_csv(FULL_DIR / "model_fits_deduplicated.csv")
-    fits = pd.concat(
-        [fits[(fits["exp"].eq(exp)) & (fits["model_id"].eq(model_id))] for exp, model_id in WINNERS.items()],
-        ignore_index=True,
-    )
-    fits = add_display_label(fits)
-    params = ["q1", "q2", "q3", "lambda", "alpha_q1", "alpha_d0", "d0", "r_base", "x_reset"]
+    fits = add_display_label(fits[fits["model_id"].eq(WINNER)])
+    params = ["q1", "q2", "q3", "lambda", "alpha_q1", "alpha_d0", "d0", "r_base"]
     labels = {
         "q1": "$q_1$",
         "q2": "$q_2$",
@@ -72,7 +65,6 @@ def figure6_parameter_estimates():
         "alpha_d0": "$\\alpha_{d_0}$",
         "d0": "$d_0$",
         "r_base": "$R_{base}$",
-        "x_reset": "$\\gamma$",
     }
     summary = (
         fits.groupby("display_experiment")[params]
@@ -81,7 +73,7 @@ def figure6_parameter_estimates():
     )
     summary.to_csv(READY_DIR / "kalman_winner_parameter_summary.csv")
 
-    fig, axes = plt.subplots(3, 3, figsize=(8.4, 6.2), constrained_layout=True)
+    fig, axes = plt.subplots(2, 4, figsize=(8.4, 4.6), constrained_layout=True)
     for ax, param in zip(axes.flat, params):
         means = [summary.loc[exp, (param, "mean")] for exp in FIGURE_ORDER]
         errors = [summary.loc[exp, (param, "sem")] for exp in FIGURE_ORDER]
@@ -91,7 +83,7 @@ def figure6_parameter_estimates():
         ax.set_xticks(x, ["Exp. 1", "Exp. 2"])
         ax.set_title(labels[param], fontsize=10)
         ax.spines[["top", "right"]].set_visible(False)
-    fig.suptitle("Best-fitting model parameters by experiment", fontsize=11)
+    fig.suptitle("Best-fitting model parameters (C1_S0_B2)", fontsize=11)
     for path in [FIG_DIR / "fig6_parameter_estimates.png", FIG_DIR / "fig6_parameter_estimates.pdf"]:
         fig.savefig(path, dpi=300, bbox_inches="tight")
     plt.close(fig)
@@ -113,7 +105,7 @@ def prepare_ppc_trials() -> pd.DataFrame:
             right_on=["subID", "trial_num"],
             how="left",
         )
-        if code_exp == 1:
+        if code_exp == 2:
             merged["condition"] = np.where(np.isclose(merged["curCoherence"], 0.3), "Low", "High")
         else:
             merged["condition"] = np.where(

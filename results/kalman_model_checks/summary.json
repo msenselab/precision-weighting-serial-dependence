@@ -1,45 +1,37 @@
 {
-  "winner_models": {
-    "1": {
-      "model_id": "C1_S0_B2",
-      "model_name": "C_Q1__S_baseline__B_B2"
-    },
-    "2": {
-      "model_id": "C1_S1_B2",
-      "model_name": "C_Q1__S_x_reset__B_B2"
-    }
-  },
+  "model_id": "C1_S0_B2",
+  "model_name": "C_Q1__S_baseline__B_B2",
   "ppc": [
+    {
+      "exp": 2,
+      "model_id": "C1_S0_B2",
+      "model_name": "C_Q1__S_baseline__B_B2",
+      "cti_r": 0.994552965960967,
+      "cti_p": 4.057053796494232e-21,
+      "sdi_r": 0.9489488504453085,
+      "sdi_p": 1.75654195330292e-11,
+      "cti_mean_obs": 0.5101792568691114,
+      "cti_mean_pred": 0.5156219155215969,
+      "sdi_mean_obs": 0.11009880739489444,
+      "sdi_mean_pred": 0.10695748053912531,
+      "rmse_mean": 0.1995872902598604,
+      "mae_mean": 0.15979997758659567,
+      "n_subjects": 22
+    },
     {
       "exp": 1,
       "model_id": "C1_S0_B2",
       "model_name": "C_Q1__S_baseline__B_B2",
-      "cti_r": 0.9928793102777573,
-      "cti_p": 5.872851701583334e-20,
-      "sdi_r": 0.8060845445136082,
-      "sdi_p": 5.929490488936907e-06,
-      "cti_mean_obs": 0.6199189119011734,
-      "cti_mean_pred": 0.6193131289431998,
-      "sdi_mean_obs": 0.06645375111872406,
-      "sdi_mean_pred": 0.06577435663478448,
-      "rmse_mean": 0.1849779956233191,
-      "mae_mean": 0.14914019474430024,
-      "n_subjects": 22
-    },
-    {
-      "exp": 2,
-      "model_id": "C1_S1_B2",
-      "model_name": "C_Q1__S_x_reset__B_B2",
-      "cti_r": 0.9950850197854445,
-      "cti_p": 1.4547051398733308e-21,
-      "sdi_r": 0.9343461821271909,
-      "sdi_p": 2.0445728523269019e-10,
-      "cti_mean_obs": 0.5101792568691114,
-      "cti_mean_pred": 0.5124989496354776,
-      "sdi_mean_obs": 0.11009880739489443,
-      "sdi_mean_pred": 0.1108603460144676,
-      "rmse_mean": 0.19841731679904562,
-      "mae_mean": 0.1589320108403327,
+      "cti_r": 0.9956123747777393,
+      "cti_p": 4.685881051353058e-22,
+      "sdi_r": 0.751337905339757,
+      "sdi_p": 5.569111795486484e-05,
+      "cti_mean_obs": 0.6199189119011738,
+      "cti_mean_pred": 0.6131441191048448,
+      "sdi_mean_obs": 0.06645375111872412,
+      "sdi_mean_pred": 0.06630725807910459,
+      "rmse_mean": 0.18251563922180747,
+      "mae_mean": 0.1470770889215283,
       "n_subjects": 22
     }
   ],
@@ -48,38 +40,38 @@
       "exp": 1,
       "source": "Reproduction",
       "grouping": "current_uncertainty",
-      "contrast": "Experiment 1 High-Low",
-      "mean_diff": 0.04063954904914371,
-      "sem_diff": 0.016780805751612508,
+      "contrast": "Exp1 dynamic High-Low",
+      "mean_diff": 0.04063954904914374,
+      "sem_diff": 0.016780805751612497,
       "n_subjects": 22
     },
     {
       "exp": 1,
       "source": "pred",
       "grouping": "current_uncertainty",
-      "contrast": "Experiment 1 High-Low",
-      "mean_diff": 0.005700224018510182,
-      "sem_diff": 0.004166413267165629,
+      "contrast": "Exp1 dynamic High-Low",
+      "mean_diff": 0.003051688618980668,
+      "sem_diff": 0.0050416844430098235,
       "n_subjects": 22
     },
     {
       "exp": 2,
       "source": "Reproduction",
       "grouping": "SameSwitch",
-      "contrast": "Experiment 2 Same-Switch",
-      "mean_diff": 0.0404150213501846,
-      "sem_diff": 0.013076225362385731,
+      "contrast": "Exp2 fixed Same-Switch",
+      "mean_diff": 0.04041502135018463,
+      "sem_diff": 0.013076225362385747,
       "n_subjects": 22
     },
     {
       "exp": 2,
       "source": "pred",
       "grouping": "SameSwitch",
-      "contrast": "Experiment 2 Same-Switch",
-      "mean_diff": 0.010717724420601225,
-      "sem_diff": 0.0047105706461177035,
+      "contrast": "Exp2 fixed Same-Switch",
+      "mean_diff": 0.007211633201514336,
+      "sem_diff": 0.003593292518628659,
       "n_subjects": 22
     }
   ],
-  "parameter_recovery_n_sims": 0
+  "parameter_recovery_n_sims": 5
 }
