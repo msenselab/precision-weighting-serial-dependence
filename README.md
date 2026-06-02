@@ -73,7 +73,7 @@ uv run python code/04_fit_kalman_models.py --workers 1
 
 ## Notebooks
 
-The notebooks in `notebooks/` are retained as saved-output analysis records. They are useful for reading the analysis history and inspecting rendered outputs, but the reproducible pipeline is the numbered script sequence in `code/`.
+The notebooks in `notebooks/` are retained as saved-output analysis records. They include the final manuscript and appendix figure coverage, plus additional QC/intermediate plots from the analysis history. The notebook-local plotting helper lives in `notebooks/shared/`. The canonical exported figures remain in `figures/`, and the reproducible pipeline is the numbered script sequence in `code/`.
 
 ## Main outputs
 
