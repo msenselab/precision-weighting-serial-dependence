@@ -227,10 +227,10 @@ def main():
         fits_dir = ROOT / fits_dir
     data, winner, winner_models = load_inputs(fits_dir, args.winner_model_id)
     ppc = add_predictions(data, winner, winner_models)
-    ppc.to_csv(out_dir / "winner_ppc_trial_predictions.csv", index=False, float_format="%.12g")
+    ppc.to_csv(out_dir / "winner_ppc_trial_predictions.csv", index=False, float_format="%.10g")
 
     metrics = subject_metrics(ppc)
-    metrics.to_csv(out_dir / "winner_ppc_subject_metrics.csv", index=False, float_format="%.12g")
+    metrics.to_csv(out_dir / "winner_ppc_subject_metrics.csv", index=False, float_format="%.10g")
 
     metric_summary_rows = []
     for exp, d in metrics.groupby("exp", sort=True):
@@ -253,15 +253,15 @@ def main():
             "n_subjects": d["Sub"].nunique(),
         })
     metric_summary = pd.DataFrame(metric_summary_rows)
-    metric_summary.to_csv(out_dir / "winner_ppc_summary.csv", index=False, float_format="%.12g")
+    metric_summary.to_csv(out_dir / "winner_ppc_summary.csv", index=False, float_format="%.10g")
 
     obs_effects = controlled_slope_by_condition(data, "Reproduction")
     pred_effects = controlled_slope_by_condition(ppc, "pred")
     effects = pd.concat([obs_effects, pred_effects], ignore_index=True)
-    effects.to_csv(out_dir / "winner_behavioral_effects_subject.csv", index=False, float_format="%.12g")
+    effects.to_csv(out_dir / "winner_behavioral_effects_subject.csv", index=False, float_format="%.10g")
     effect_summary, effect_contrasts = summarize_effect_recovery(effects)
-    effect_summary.to_csv(out_dir / "winner_behavioral_effect_summary.csv", index=False, float_format="%.12g")
-    effect_contrasts.to_csv(out_dir / "winner_behavioral_effect_contrasts.csv", index=False, float_format="%.12g")
+    effect_summary.to_csv(out_dir / "winner_behavioral_effect_summary.csv", index=False, float_format="%.10g")
+    effect_contrasts.to_csv(out_dir / "winner_behavioral_effect_contrasts.csv", index=False, float_format="%.10g")
 
     # Console-only summary (no summary.md / summary.json are written; the CSV
     # outputs above are the canonical machine-readable artifacts).

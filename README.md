@@ -61,7 +61,7 @@ Run the Kalman-model consistency checks from the included canonical fit outputs:
 uv run python code/05_validate_kalman.py
 ```
 
-The exported files in `figures/` are the canonical manuscript figures. The plotting scripts in `code/06_plot_behavior.py` and `code/07_plot_kalman.py` are retained for inspecting public source-data tables and saved model outputs, but the manuscript figures should be treated as the authoritative exported assets.
+The exported files in `figures/` are the canonical manuscript figures. The plotting scripts `code/06_plot_behavior.py` (Figures 2, 3, 4, A1) and `code/07_plot_kalman.py` (Figures 6, 7, B1, B2) regenerate these canonical figures from the cleaned data and saved model outputs. They reuse the manuscript plotting modules vendored under `code/figlib/` (including the analysis tables in `code/figlib/manuscript_ready_outputs/` used by Figures 3 and A1). Each script renders to a temporary directory and copies only the canonical figure stems into `figures/`. Figures 1 and 5 are static schematics and are not produced by these scripts.
 
 Full Kalman model fitting/filtering is computationally expensive and is **not required** for the public release. Canonical fit outputs are included in `results/kalman_model_fits/`, and saved PPC/trial-level prediction outputs are included in `results/kalman_model_checks/`, so readers and the Kalman notebook can inspect the final model results without rerunning the Kalman filter.
 
