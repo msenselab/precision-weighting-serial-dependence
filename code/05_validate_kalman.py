@@ -16,15 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 MODEL_ROOT = ROOT / "models"
 sys.path.insert(0, str(MODEL_ROOT))
 
-from three_state_kalman.engine import generate_predictions, simulate_responses  # noqa: E402
-from three_state_kalman.fitting import fit_single_model  # noqa: E402
+from three_state_kalman.engine import generate_predictions  # noqa: E402
 from three_state_kalman.parameters import get_parameter_config  # noqa: E402
-
-
-MODEL_ID = "C1_S0_B2"
-C_ID, S_ID, B_ID = MODEL_ID.split("_")
-MODEL_NAME = "C_Q1__S_baseline__B_B2"
-PARAM_NAMES = get_parameter_config(C_ID, S_ID, B_ID)["names"]
 
 
 def display_path(path: Path) -> str:
@@ -213,80 +206,8 @@ def summarize_effect_recovery(effects):
     return summary, contrasts_df
 
 
-def parameter_recovery(data, winner, n_sims, n_starts, max_nfev, seed):
-    rng = np.random.default_rng(seed)
-    rows = []
-    for sim in range(n_sims):
-        for (exp, sub), d in data.groupby(["exp", "Sub"], sort=True):
-            fit = winner[(winner["exp"] == exp) & (winner["Sub"] == sub)].iloc[0]
-            par_true = np.array([fit[name] for name in PARAM_NAMES], dtype=float)
-            stimrep = d[["Duration", "Reproduction"]].to_numpy(float)
-            coherence = d["coherence"].to_numpy(float)
-            structure = d["Structure"].to_numpy(str)
-            noise_scale = float(fit["RMSE"]) if np.isfinite(fit["RMSE"]) else 0.2
-            y_sim = simulate_responses(
-                par_true,
-                stimrep,
-                coherence,
-                structure,
-                C_ID,
-                S_ID,
-                B_ID,
-                add_noise=True,
-                noise_scale=noise_scale,
-            )
-            sim_stimrep = np.column_stack([stimrep[:, 0], y_sim])
-            recovered = fit_single_model(
-                sim_stimrep,
-                coherence,
-                structure,
-                C_ID,
-                S_ID,
-                B_ID,
-                n_starts=n_starts,
-                max_nfev=max_nfev,
-                seed=int(rng.integers(0, 2**31 - 1)),
-            )
-            row = {
-                "sim": sim,
-                "exp": exp,
-                "Sub": sub,
-                "success": recovered.get("success", False),
-                "AIC": recovered.get("AIC", np.nan),
-                "RMSE": recovered.get("RMSE", np.nan),
-            }
-            for name, true_val in zip(PARAM_NAMES, par_true):
-                row[f"{name}_true"] = true_val
-                row[f"{name}_recovered"] = recovered.get(name, np.nan)
-            rows.append(row)
-    return pd.DataFrame(rows)
-
-
-def summarize_parameter_recovery(rec):
-    rows = []
-    for exp, d in rec.groupby("exp", sort=True):
-        for name in PARAM_NAMES:
-            r, p = corr(d[f"{name}_true"], d[f"{name}_recovered"])
-            err = d[f"{name}_recovered"] - d[f"{name}_true"]
-            rows.append({
-                "exp": exp,
-                "parameter": name,
-                "r": r,
-                "p": p,
-                "mean_error": err.mean(),
-                "mae": np.abs(err).mean(),
-                "n": err.notna().sum(),
-            })
-    return pd.DataFrame(rows)
-
-
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--n-sims", type=int, default=5)
-    parser.add_argument("--n-starts", type=int, default=5)
-    parser.add_argument("--max-nfev", type=int, default=2000)
-    parser.add_argument("--seed", type=int, default=20260528)
-    parser.add_argument("--skip-parameter-recovery", action="store_true")
     parser.add_argument("--fits-dir", type=Path, default=ROOT / "results" / "kalman_model_fits")
     parser.add_argument("--out-dir", type=Path, default=ROOT / "results" / "kalman_model_checks")
     parser.add_argument(
@@ -306,10 +227,10 @@ def main():
         fits_dir = ROOT / fits_dir
     data, winner, winner_models = load_inputs(fits_dir, args.winner_model_id)
     ppc = add_predictions(data, winner, winner_models)
-    ppc.to_csv(out_dir / "winner_ppc_trial_predictions.csv", index=False)
+    ppc.to_csv(out_dir / "winner_ppc_trial_predictions.csv", index=False, float_format="%.12g")
 
     metrics = subject_metrics(ppc)
-    metrics.to_csv(out_dir / "winner_ppc_subject_metrics.csv", index=False)
+    metrics.to_csv(out_dir / "winner_ppc_subject_metrics.csv", index=False, float_format="%.12g")
 
     metric_summary_rows = []
     for exp, d in metrics.groupby("exp", sort=True):
@@ -332,24 +253,15 @@ def main():
             "n_subjects": d["Sub"].nunique(),
         })
     metric_summary = pd.DataFrame(metric_summary_rows)
-    metric_summary.to_csv(out_dir / "winner_ppc_summary.csv", index=False)
+    metric_summary.to_csv(out_dir / "winner_ppc_summary.csv", index=False, float_format="%.12g")
 
     obs_effects = controlled_slope_by_condition(data, "Reproduction")
     pred_effects = controlled_slope_by_condition(ppc, "pred")
     effects = pd.concat([obs_effects, pred_effects], ignore_index=True)
-    effects.to_csv(out_dir / "winner_behavioral_effects_subject.csv", index=False)
+    effects.to_csv(out_dir / "winner_behavioral_effects_subject.csv", index=False, float_format="%.12g")
     effect_summary, effect_contrasts = summarize_effect_recovery(effects)
-    effect_summary.to_csv(out_dir / "winner_behavioral_effect_summary.csv", index=False)
-    effect_contrasts.to_csv(out_dir / "winner_behavioral_effect_contrasts.csv", index=False)
-
-    rec_summary = pd.DataFrame()
-    if not args.skip_parameter_recovery and len({m["model_id"] for m in winner_models.values()}) > 1:
-        raise RuntimeError("Parameter recovery currently requires one shared winner; rerun with --skip-parameter-recovery.")
-    if not args.skip_parameter_recovery:
-        rec = parameter_recovery(data, winner, args.n_sims, args.n_starts, args.max_nfev, args.seed)
-        rec.to_csv(out_dir / "winner_parameter_recovery.csv", index=False)
-        rec_summary = summarize_parameter_recovery(rec)
-        rec_summary.to_csv(out_dir / "winner_parameter_recovery_summary.csv", index=False)
+    effect_summary.to_csv(out_dir / "winner_behavioral_effect_summary.csv", index=False, float_format="%.12g")
+    effect_contrasts.to_csv(out_dir / "winner_behavioral_effect_contrasts.csv", index=False, float_format="%.12g")
 
     # Console-only summary (no summary.md / summary.json are written; the CSV
     # outputs above are the canonical machine-readable artifacts).
@@ -373,13 +285,6 @@ def main():
         lines.append(
             f"- {row['contrast']} ({label}): mean diff={row['mean_diff']:.4f}, SEM={row['sem_diff']:.4f}"
         )
-    if not rec_summary.empty:
-        lines.append("")
-        lines.append(f"## Parameter recovery ({args.n_sims} simulations per subject)")
-        for exp, d in rec_summary.groupby("exp", sort=True):
-            label = f"Experiment {exp}"
-            vals = ", ".join(f"{r.parameter}: r={r.r:.2f}" for r in d.itertuples())
-            lines.append(f"- {label}: {vals}")
     lines.append("")
     lines.append(f"All outputs are in `{display_path(out_dir)}`.")
 

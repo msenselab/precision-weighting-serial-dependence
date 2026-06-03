@@ -1,5 +1,5 @@
 [project]
-name = "serial-dependence-uncertainty"
+name = "precision-weighting-serial-dependence"
 version = "0.1.0"
 description = "Kalman filter analysis of serial dependence under uncertainty"
 readme = "README.md"

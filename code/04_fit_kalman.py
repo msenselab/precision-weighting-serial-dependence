@@ -403,19 +403,6 @@ def summarize(results: pd.DataFrame) -> None:
     )
     params.to_csv(OUTDIR / "model_parameter_means.csv", index=False)
 
-    lines = ["# Three-State Kalman Model Fits", ""]
-    for exp_num, d in rank.groupby("exp"):
-        lines.append(f"## Experiment {exp_num}")
-        for _, r in d.head(15).iterrows():
-            lines.append(
-                f"- {r['model_name']}: mean AIC={r['mean_AIC']:.3f}, "
-                f"delta={r['delta_AIC']:.3f}, RMSE={r['mean_RMSE']:.4f}, "
-                f"success={r['success_rate']:.2f}"
-            )
-        lines.append("")
-    (OUTDIR / "summary.md").write_text("\n".join(lines))
-    print((OUTDIR / "summary.md").read_text(), flush=True)
-
 
 def main() -> None:
     args = parse_args()

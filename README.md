@@ -58,7 +58,7 @@ uv run python code/03_behavior_results.py
 Run the Kalman-model consistency checks from the included canonical fit outputs:
 
 ```bash
-uv run python code/05_validate_kalman.py --skip-parameter-recovery
+uv run python code/05_validate_kalman.py
 ```
 
 The exported files in `figures/` are the canonical manuscript figures. The plotting scripts in `code/06_plot_behavior.py` and `code/07_plot_kalman.py` are retained for inspecting public source-data tables and saved model outputs, but the manuscript figures should be treated as the authoritative exported assets.
