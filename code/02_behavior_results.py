@@ -28,18 +28,54 @@ DISPLAY = {
 }
 
 
-def fit_mixedlm(df: pd.DataFrame, formula: str, re_formula: str = "1"):
-    model = smf.mixedlm(formula, df, groups=df["subID"], re_formula=re_formula)
+def mixedlm_invalid_reason(result) -> str | None:
+    """Return why a MixedLM result is unusable, or None when it is valid."""
+    if not result.converged:
+        return "optimizer did not converge"
+    if not np.isfinite(result.llf):
+        return "log likelihood is not finite"
+    if not np.isfinite(np.asarray(result.fe_params, dtype=float)).all():
+        return "fixed-effect estimates are not finite"
+    if not np.isfinite(np.asarray(result.bse_fe, dtype=float)).all():
+        return "fixed-effect standard errors are not finite"
+
+    cov_re = np.asarray(result.cov_re, dtype=float)
+    if not np.isfinite(cov_re).all():
+        return "random-effect covariance is not finite"
+    if cov_re.size and np.linalg.matrix_rank(cov_re) < cov_re.shape[0]:
+        return "random-effect covariance is singular"
+    if cov_re.size and np.any(np.linalg.eigvalsh(cov_re) <= 0):
+        return "random-effect covariance is not positive definite"
+    return None
+
+
+def fit_mixedlm(
+    df: pd.DataFrame,
+    formula: str,
+    re_formula: str = "1",
+    methods: tuple[str, ...] = ("lbfgs", "powell", "cg"),
+):
     last_error = None
-    for method in ("lbfgs", "powell", "cg"):
+    failures = []
+    for method in methods:
         try:
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
+                model = smf.mixedlm(
+                    formula, df, groups=df["subID"], re_formula=re_formula
+                )
                 result = model.fit(reml=True, method=method, disp=False, maxiter=3000)
-            return result, method
+                invalid_reason = mixedlm_invalid_reason(result)
+            if invalid_reason is None:
+                return result, method
+            failures.append(f"{method}: {invalid_reason}")
         except Exception as exc:  # pragma: no cover - diagnostic path
             last_error = exc
-    raise RuntimeError(f"MixedLM failed: {formula}") from last_error
+            failures.append(f"{method}: {type(exc).__name__}: {exc}")
+    details = "; ".join(failures)
+    raise RuntimeError(
+        f"MixedLM failed or produced invalid fits: {formula}. {details}"
+    ) from last_error
 
 
 def param_rows(result, dataset: str, model_name: str, formula: str, method: str) -> list[dict[str, object]]:
@@ -253,7 +289,9 @@ def response_error_models(marked_datasets: dict[str, pd.DataFrame]) -> tuple[pd.
         model_df = df[df["is_outlier"] == False].dropna(
             subset=["curBias", "curDur_c", "preDur_c"] + predictors
         ).copy()
-        result, method = fit_mixedlm(model_df, formula, "1")
+        result, method = fit_mixedlm(
+            model_df, formula, "1", methods=("powell", "cg", "lbfgs")
+        )
         param_tables.extend(param_rows(result, dataset, "response_error_lag_1_to_5", formula, method))
 
         corr_df = df[df["is_outlier"] == False].dropna(

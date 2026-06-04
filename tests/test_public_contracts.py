@@ -27,6 +27,8 @@ def test_behavior_figure_source_data_has_correct_subject_counts() -> None:
     subject_counts = params.groupby("dataset")["n_subjects"].first().to_dict()
 
     assert subject_counts == {"experiment1": 22, "experiment2": 22}
+    assert params[["beta", "se", "z", "p"]].notna().all().all()
+    assert params["fit_method"].eq("powell").all()
     assert not (ROOT / "plotting" / "manuscript_ready_outputs").exists()
 
 
