@@ -7,8 +7,9 @@ It uses the shared manuscript plotting module under
 
 Public model outputs already follow the manuscript display order
 (exp 1 = dynamic/ramped, exp 2 = fixed/constant), so no experiment remap is
-applied here. Figures are rendered to a temporary staging directory and only the
-canonical stems are copied into ``figures/``.
+applied here. Figures are rendered to a temporary staging directory. Canonical
+exports under ``figures/`` are replaced only when the rendered PNG pixels
+change.
 """
 
 from __future__ import annotations
@@ -106,6 +107,7 @@ def main() -> None:
         "current_main_figures", PLOTTING / "generate_main_figures.py"
     )
     main_figs.FIG_DIR = staging
+    figure_io = import_from_path("figure_io", PLOTTING / "figure_io.py")
 
     (
         results_df,
@@ -129,13 +131,15 @@ def main() -> None:
         duplicate(staging, stem_from, stem_to)
 
     FIG_DIR.mkdir(parents=True, exist_ok=True)
+    updated = []
     for stem in CANONICAL_STEMS:
-        for ext in ("png", "pdf"):
-            src = staging / f"{stem}.{ext}"
-            if src.exists():
-                shutil.copyfile(src, FIG_DIR / f"{stem}.{ext}")
+        if figure_io.install_figure_pair(staging, FIG_DIR, stem):
+            updated.append(stem)
     shutil.rmtree(staging, ignore_errors=True)
-    print(f"Saved canonical Kalman figures to {FIG_DIR}: {', '.join(CANONICAL_STEMS)}")
+    if updated:
+        print(f"Updated Kalman figures in {FIG_DIR}: {', '.join(updated)}")
+    else:
+        print(f"Verified canonical Kalman figures unchanged: {', '.join(CANONICAL_STEMS)}")
 
 
 if __name__ == "__main__":

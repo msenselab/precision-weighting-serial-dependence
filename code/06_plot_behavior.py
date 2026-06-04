@@ -12,8 +12,8 @@ Data mapping (public datasets already follow manuscript display order):
   manuscript Exp 1 (dynamic) = data/experiment1/E1.pkl
   manuscript Exp 2 (fixed)   = data/experiment2/E2.pkl
 
-Figures are rendered in a temporary staging directory and only the canonical
-stems are copied into ``figures/``.
+Figures are rendered in a temporary staging directory. Canonical exports under
+``figures/`` are replaced only when the rendered PNG pixels change.
 """
 
 from __future__ import annotations
@@ -406,15 +406,19 @@ def main() -> None:
         "current_main_figures", PLOTTING / "generate_main_figures.py"
     )
     main_figs.FIG_DIR = staging
+    figure_io = import_from_path("figure_io", PLOTTING / "figure_io.py")
 
-    fig2 = import_from_path(
-        "current_fig2_style", PLOTTING / "figure2_combined.py"
-    )
-    fig2.OUT_DIR = staging
-    fig2.FIG_DIR = staging
+    # Figure 2 uses larger A4-oriented text settings. Keep those rcParams local
+    # so the remaining manuscript figures retain the shared Nature style.
+    with plt.rc_context():
+        fig2 = import_from_path(
+            "current_fig2_style", PLOTTING / "figure2_combined.py"
+        )
+        fig2.OUT_DIR = staging
+        fig2.FIG_DIR = staging
 
-    with patched_fig2_contrast_tests(fig2):
-        fig2.main()
+        with patched_fig2_contrast_tests(fig2):
+            fig2.main()
 
     df1, df2 = main_figs.load_data()
     df_sdi_1, df_sdi_2 = main_figs.compute_sdi_dataframes(df1, df2)
@@ -424,13 +428,15 @@ def main() -> None:
     plot_figA1_response_error_lag(staging, main_figs)
 
     FIG_DIR.mkdir(parents=True, exist_ok=True)
+    updated = []
     for stem in CANONICAL_STEMS:
-        for ext in ("png", "pdf"):
-            src = staging / f"{stem}.{ext}"
-            if src.exists():
-                shutil.copyfile(src, FIG_DIR / f"{stem}.{ext}")
+        if figure_io.install_figure_pair(staging, FIG_DIR, stem):
+            updated.append(stem)
     shutil.rmtree(staging, ignore_errors=True)
-    print(f"Saved canonical behavioral figures to {FIG_DIR}: {', '.join(CANONICAL_STEMS)}")
+    if updated:
+        print(f"Updated behavioral figures in {FIG_DIR}: {', '.join(updated)}")
+    else:
+        print(f"Verified canonical behavioral figures unchanged: {', '.join(CANONICAL_STEMS)}")
 
 
 if __name__ == "__main__":
