@@ -29,18 +29,18 @@
 ## Response-Error Carryover
 ### Experiment 1
 - Model N = 2936 trials after requiring lag-5 availability.
-- lag 1: beta = 0.176, SE = 0.018, z = 9.58, p < .001.
-- lag 2: beta = 0.090, SE = 0.016, z = 5.59, p < .001.
-- lag 3: beta = 0.048, SE = 0.016, z = 2.99, p = .003.
-- lag 4: beta = 0.040, SE = 0.016, z = 2.46, p = .014.
-- lag 5: beta = 0.022, SE = 0.016, z = 1.34, p = .181.
+- lag 1: beta = 0.184, SE = 0.019, z = 9.93, p < .001.
+- lag 2: beta = 0.095, SE = 0.016, z = 5.89, p < .001.
+- lag 3: beta = 0.053, SE = 0.016, z = 3.28, p = .001.
+- lag 4: beta = 0.045, SE = 0.016, z = 2.77, p = .006.
+- lag 5: beta = 0.027, SE = 0.016, z = 1.68, p = .093.
 ### Experiment 2
 - Model N = 2771 trials after requiring lag-5 availability.
-- lag 1: beta = 0.130, SE = 0.019, z = 6.94, p < .001.
-- lag 2: beta = 0.040, SE = 0.016, z = 2.58, p = .010.
-- lag 3: beta = 0.049, SE = 0.016, z = 3.16, p = .002.
-- lag 4: beta = 0.035, SE = 0.016, z = 2.21, p = .027.
-- lag 5: beta = 0.041, SE = 0.016, z = 2.66, p = .008.
+- lag 1: beta = 0.138, SE = 0.019, z = 7.34, p < .001.
+- lag 2: beta = 0.045, SE = 0.016, z = 2.86, p = .004.
+- lag 3: beta = 0.054, SE = 0.016, z = 3.41, p < .001.
+- lag 4: beta = 0.038, SE = 0.016, z = 2.44, p = .015.
+- lag 5: beta = 0.046, SE = 0.016, z = 2.93, p = .003.
 
 ## Collinearity / VIF
 - Experiment 1: r(previous duration, previous reproduced duration) = 0.603; r(previous duration, previous response error) = -0.387; largest VIF = 1.56.
