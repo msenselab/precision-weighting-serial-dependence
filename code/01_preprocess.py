@@ -6,7 +6,7 @@ Stage 1 screens participants using only objective trial criteria:
     - valid target duration, non-missing response, abs(response error) <= 0.6 s
     - participant valid-trial ratio > 0.8 of 240 trials
 
-Stage 2 recomputes trial-level IQR outliers only within the retained participants.
+Stage 2 recomputes trial-level +/- 3 SD outliers only within the retained participants.
 Previous-trial variables are constructed after participant selection and are reset at
 block boundaries so they do not carry across blocks. Boundary trials are retained
 in the output and marked as analysis exclusions rather than dropped.
@@ -30,7 +30,7 @@ TIME_BOUNDS = (0.8, 1.6)
 EXPECTED_TRIALS = 240
 MIN_VALID_RATIO = 0.8
 MAX_N_BACK = 10
-MAX_N_FUTURE_EXP2 = 2
+MAX_N_FUTURE = 2
 
 
 @dataclass(frozen=True)
@@ -46,13 +46,13 @@ EXPERIMENTS = [
         exp_num=1,
         rawdata_dir=ROOT / "raw" / "experiment1",
         output_name="E1.pkl",
-        max_n_future=MAX_N_FUTURE_EXP2,
+        max_n_future=MAX_N_FUTURE,
     ),
     ExperimentConfig(
         exp_num=2,
         rawdata_dir=ROOT / "raw" / "experiment2",
         output_name="E2.pkl",
-        max_n_future=MAX_N_FUTURE_EXP2,
+        max_n_future=MAX_N_FUTURE,
     ),
 ]
 
@@ -137,11 +137,10 @@ def add_final_sample_outlier_flags(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.D
     Primary rule: a hard plausibility bound |reproduction error| > 0.6 s (carried in
     `objective_outlier`, also used for the >80% subject screening) PLUS a within
     participant x stimulus-duration +/- 3 SD distributional rule on reproduction error.
-    The 1.5 x IQR rule has been retired. Block-boundary first trials are removed
-    downstream in `construct_trial_variables`.
+    Block-boundary first trials are removed downstream in `construct_trial_variables`.
     """
     df = df.copy()
-    df["err_sd_outlier"] = False
+    df["sd_outlier_final_sample"] = False
     usable = ~(df["bad_time_bounds"] | df["bad_missing_response"])
     thresholds = []
     for (sub, duration), group in df.groupby(["subID", "TimeDur"], dropna=False):
@@ -152,7 +151,7 @@ def add_final_sample_outlier_flags(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.D
         mu, sd = err.mean(), err.std()
         if pd.isna(sd) or sd == 0:
             continue
-        df.loc[idx, "err_sd_outlier"] = (err - mu).abs() > 3 * sd
+        df.loc[idx, "sd_outlier_final_sample"] = (err - mu).abs() > 3 * sd
         thresholds.append(
             {
                 "subID": sub,
@@ -165,9 +164,7 @@ def add_final_sample_outlier_flags(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.D
             }
         )
 
-    # Keep the legacy column name for downstream compatibility.
-    df["iqr_outlier_final_sample"] = df["err_sd_outlier"]
-    df["is_outlier"] = df["objective_outlier"] | df["err_sd_outlier"]
+    df["is_outlier"] = df["objective_outlier"] | df["sd_outlier_final_sample"]
     return df, pd.DataFrame(thresholds)
 
 
@@ -199,7 +196,7 @@ def construct_trial_variables(df: pd.DataFrame, max_n_future: int = 0) -> pd.Dat
     df["block_boundary_outlier"] = boundary
     df["is_outlier"] = df["is_outlier"] | df["block_boundary_outlier"]
 
-    response_invalid = df["objective_outlier"] | df["iqr_outlier_final_sample"]
+    response_invalid = df["objective_outlier"] | df["sd_outlier_final_sample"]
     valid_response_for_mean = df["rpr"].where(~response_invalid)
     df["mean_rpr"] = valid_response_for_mean.groupby(df["subID"]).transform("mean")
     df["resp_type"] = np.where(df["rpr"] > df["mean_rpr"], "Long", "Short")
@@ -237,7 +234,7 @@ def construct_trial_variables(df: pd.DataFrame, max_n_future: int = 0) -> pd.Dat
         "TransitionType",
         "is_outlier",
         "objective_outlier",
-        "iqr_outlier_final_sample",
+        "sd_outlier_final_sample",
         "bad_abs_error",
         "bad_missing_response",
         "bad_time_bounds",
@@ -309,7 +306,9 @@ def main() -> None:
     summary_df = pd.DataFrame(summaries)
     summary_df.to_csv(OUTDIR / "preprocessing_summary.csv", index=False)
     pd.concat(subject_tables, ignore_index=True).to_csv(OUTDIR / "subject_screening.csv", index=False)
-    pd.concat(threshold_tables, ignore_index=True).to_csv(OUTDIR / "final_sample_iqr_thresholds.csv", index=False)
+    pd.concat(threshold_tables, ignore_index=True).to_csv(
+        OUTDIR / "final_sample_sd_thresholds.csv", index=False
+    )
     pd.concat(skipped_tables, ignore_index=True).to_csv(OUTDIR / "skipped_files.csv", index=False)
 
     print(summary_df.to_string(index=False))

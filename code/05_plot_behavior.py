@@ -5,12 +5,12 @@ It uses the shared manuscript plotting modules under ``plotting/``:
 
   - ``generate_main_figures.py``        (cross-experiment + shared helpers)
   - ``figure2_combined.py``             (Figure 2 six-panel layout)
-  - ``manuscript_ready_outputs/``       (analysis intermediate tables used by
-                                         Figure 3 and Figure A1)
+  - ``results/figure_source_data/``      (behavioral analysis tables used by
+                                         Figure 2, Figure 3, and Figure A1)
 
-Data mapping (public datasets already follow manuscript display order):
-  manuscript Exp 1 (dynamic) = data/experiment1/E1.pkl
-  manuscript Exp 2 (fixed)   = data/experiment2/E2.pkl
+Data mapping:
+  Experiment 1 (dynamic) = data/experiment1/E1.pkl
+  Experiment 2 (fixed)   = data/experiment2/E2.pkl
 
 Figures are rendered in a temporary staging directory. Canonical exports under
 ``figures/`` are replaced only when the rendered PNG pixels change.
@@ -38,11 +38,11 @@ from scipy.stats import sem, ttest_1samp
 ROOT = Path(__file__).resolve().parents[1]
 PLOTTING = ROOT / "plotting"
 FIG_DIR = ROOT / "figures"
-READY = PLOTTING / "manuscript_ready_outputs"
+SOURCE_DATA = ROOT / "results" / "figure_source_data"
 
-RESP_LAG_PARAMS = READY / "response_error_lag_lmm_parameters.csv"
-CONTROLLED_SLOPES = READY / "participant_controlled_slopes.csv"
-CONTROLLED_CONTRASTS = READY / "participant_controlled_slope_contrasts.csv"
+RESP_LAG_PARAMS = SOURCE_DATA / "response_error_lag_lmm_parameters.csv"
+CONTROLLED_SLOPES = SOURCE_DATA / "participant_controlled_slopes.csv"
+CONTROLLED_CONTRASTS = SOURCE_DATA / "participant_controlled_slope_contrasts.csv"
 
 CANONICAL_STEMS = [
     "fig2_behavioral_results_combined",
@@ -72,25 +72,25 @@ def patched_fig2_contrast_tests(module):
     formal = pd.read_csv(CONTROLLED_CONTRASTS)
     p_exp1 = float(
         formal[
-            (formal["dataset"] == "manuscript_exp1_dynamic")
+            (formal["dataset"] == "experiment1")
             & (formal["grouping"] == "current_coherence_label")
         ]["p"].iloc[0]
     )
     t_exp1 = float(
         formal[
-            (formal["dataset"] == "manuscript_exp1_dynamic")
+            (formal["dataset"] == "experiment1")
             & (formal["grouping"] == "current_coherence_label")
         ]["t"].iloc[0]
     )
     p_exp2 = float(
         formal[
-            (formal["dataset"] == "manuscript_exp2_fixed")
+            (formal["dataset"] == "experiment2")
             & (formal["grouping"] == "same_switch_label")
         ]["p"].iloc[0]
     )
     t_exp2 = float(
         formal[
-            (formal["dataset"] == "manuscript_exp2_fixed")
+            (formal["dataset"] == "experiment2")
             & (formal["grouping"] == "same_switch_label")
         ]["t"].iloc[0]
     )
@@ -144,7 +144,7 @@ def plot_fig3_from_formal_slopes(staging: Path, main_module) -> None:
     ax = axes[0]
     conds = ["Low", "High"]
     colors = {"Low": main_module.COLORS["low"], "High": main_module.COLORS["high"]}
-    datasets = ["manuscript_exp1_dynamic", "manuscript_exp2_fixed"]
+    datasets = ["experiment1", "experiment2"]
     labels = ["Exp 1", "Exp 2"]
     means = {}
     sems = {}
@@ -350,11 +350,11 @@ def plot_figA1_response_error_lag(staging: Path, main_module) -> None:
     params = params[params["parameter"].str.startswith("response_error_lag")].copy()
     params["lag"] = params["parameter"].str.extract(r"lag(\d+)").astype(int)
 
-    order = ["manuscript_exp1_dynamic", "manuscript_exp2_fixed"]
-    labels = {"manuscript_exp1_dynamic": "Experiment 1", "manuscript_exp2_fixed": "Experiment 2"}
+    order = ["experiment1", "experiment2"]
+    labels = {"experiment1": "Experiment 1", "experiment2": "Experiment 2"}
     colors = {
-        "manuscript_exp1_dynamic": main_module.COLORS.get("high", "#2196F3"),
-        "manuscript_exp2_fixed": main_module.COLORS.get("low", "#FF9800"),
+        "experiment1": main_module.COLORS.get("high", "#2196F3"),
+        "experiment2": main_module.COLORS.get("low", "#FF9800"),
     }
 
     def sig_label(p_value: float) -> str:

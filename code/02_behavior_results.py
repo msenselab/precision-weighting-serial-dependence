@@ -228,7 +228,9 @@ def subject_slopes(datasets: dict[str, pd.DataFrame]) -> tuple[pd.DataFrame, pd.
 
 def add_response_error_lags(df: pd.DataFrame, max_lag: int = 5) -> pd.DataFrame:
     df = df.sort_values(["subID", "trial_num"]).copy()
-    response_invalid = df["objective_outlier"] | df["iqr_outlier_final_sample"] | df["rpr"].isna()
+    response_invalid = (
+        df["objective_outlier"] | df["sd_outlier_final_sample"] | df["rpr"].isna()
+    )
     df["response_error_for_lag"] = df["curBias"].where(~response_invalid)
     df["rpr_for_lag"] = df["rpr"].where(~response_invalid)
     for lag in range(1, max_lag + 1):
