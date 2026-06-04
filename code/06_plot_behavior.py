@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 """Regenerate the canonical behavioral manuscript figures (Fig 2, 3, 4, A1).
 
-This is the public-repo port of the manuscript figure pipeline
-(`regenerate_current_style_figures.py`). It reuses the exact manuscript plotting
-modules, vendored under ``code/figlib/``:
+It uses the shared manuscript plotting modules under ``plotting/``:
 
   - ``generate_main_figures.py``        (cross-experiment + shared helpers)
-  - ``combined_ct_sd_figure_draft.py``  (Figure 2 six-panel layout)
+  - ``figure2_combined.py``             (Figure 2 six-panel layout)
   - ``manuscript_ready_outputs/``       (analysis intermediate tables used by
                                          Figure 3 and Figure A1)
 
@@ -20,6 +18,7 @@ stems are copied into ``figures/``.
 
 from __future__ import annotations
 
+import argparse
 import importlib.util
 import shutil
 import tempfile
@@ -37,13 +36,9 @@ from scipy.stats import sem, ttest_1samp
 
 
 ROOT = Path(__file__).resolve().parents[1]
-FIGLIB = ROOT / "code" / "figlib"
+PLOTTING = ROOT / "plotting"
 FIG_DIR = ROOT / "figures"
-READY = FIGLIB / "manuscript_ready_outputs"
-
-# Manuscript Exp 1 (dynamic) = public experiment1; Exp 2 (fixed) = public experiment2.
-DATA_EXP1_DYNAMIC = ROOT / "data" / "experiment1" / "E1.pkl"
-DATA_EXP2_FIXED = ROOT / "data" / "experiment2" / "E2.pkl"
+READY = PLOTTING / "manuscript_ready_outputs"
 
 RESP_LAG_PARAMS = READY / "response_error_lag_lmm_parameters.csv"
 CONTROLLED_SLOPES = READY / "participant_controlled_slopes.csv"
@@ -57,6 +52,10 @@ CANONICAL_STEMS = [
 ]
 
 
+def parse_args() -> argparse.Namespace:
+    return argparse.ArgumentParser(description=__doc__).parse_args()
+
+
 def import_from_path(name: str, path: Path):
     spec = importlib.util.spec_from_file_location(name, path)
     if spec is None or spec.loader is None:
@@ -64,26 +63,6 @@ def import_from_path(name: str, path: Path):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
-
-
-@contextmanager
-def patched_read_pickle(module):
-    """Redirect the manuscript module's hard-coded pickle paths to public data."""
-    original = module.pd.read_pickle
-
-    def read_pickle(path, *args, **kwargs):
-        path = Path(path)
-        if path.parts[-3:] == ("Experiment2", "Analysis", "E2.pkl"):
-            return original(DATA_EXP1_DYNAMIC, *args, **kwargs)
-        if path.parts[-3:] == ("Experiment1", "Analysis", "E1.pkl"):
-            return original(DATA_EXP2_FIXED, *args, **kwargs)
-        return original(path, *args, **kwargs)
-
-    module.pd.read_pickle = read_pickle
-    try:
-        yield
-    finally:
-        module.pd.read_pickle = original
 
 
 @contextmanager
@@ -130,14 +109,6 @@ def patched_fig2_contrast_tests(module):
         yield
     finally:
         module.stats.ttest_rel = original
-
-
-def duplicate(staging: Path, stem_from: str, stem_to: str) -> None:
-    for ext in ("png", "pdf"):
-        src = staging / f"{stem_from}.{ext}"
-        dst = staging / f"{stem_to}.{ext}"
-        if src.exists():
-            shutil.copyfile(src, dst)
 
 
 def p_to_stars(p_value: float) -> str:
@@ -431,19 +402,21 @@ def plot_figA1_response_error_lag(staging: Path, main_module) -> None:
 def main() -> None:
     staging = Path(tempfile.mkdtemp(prefix="behavior_figs_"))
 
-    main_figs = import_from_path("current_main_figures", FIGLIB / "generate_main_figures.py")
+    main_figs = import_from_path(
+        "current_main_figures", PLOTTING / "generate_main_figures.py"
+    )
     main_figs.FIG_DIR = staging
 
-    fig2 = import_from_path("current_fig2_style", FIGLIB / "combined_ct_sd_figure_draft.py")
+    fig2 = import_from_path(
+        "current_fig2_style", PLOTTING / "figure2_combined.py"
+    )
     fig2.OUT_DIR = staging
     fig2.FIG_DIR = staging
 
-    with patched_read_pickle(fig2), patched_fig2_contrast_tests(fig2):
+    with patched_fig2_contrast_tests(fig2):
         fig2.main()
-    duplicate(staging, "fig2_fig3_combined_3x2_draft", "fig2_behavioral_results_combined")
 
-    with patched_read_pickle(main_figs):
-        df1, df2 = main_figs.load_data()
+    df1, df2 = main_figs.load_data()
     df_sdi_1, df_sdi_2 = main_figs.compute_sdi_dataframes(df1, df2)
     main_figs.plot_fig5_cross_experiment(df1, df2, df_sdi_1, df_sdi_2)
     plot_fig3_from_formal_slopes(staging, main_figs)
@@ -461,4 +434,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    parse_args()
     main()

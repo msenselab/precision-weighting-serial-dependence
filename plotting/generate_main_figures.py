@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
-"""
-Generate all main manuscript figures.
+"""Shared plotting functions for the manuscript figures.
 
-EXPERIMENT SWAP (manuscript presentation order):
-  - New Experiment 1 = Dynamic Coherence (data from E2.pkl)
-  - New Experiment 2 = Fixed Coherence   (data from E1.pkl)
-
-Data files are NOT renamed; only figure labels and panel ordering change.
+Public datasets already follow manuscript display order:
+  - Experiment 1 = dynamic coherence = data/experiment1/E1.pkl
+  - Experiment 2 = fixed coherence   = data/experiment2/E2.pkl
 """
 
 import os
@@ -34,7 +31,7 @@ from statsmodels.stats.stattools import durbin_watson
 import warnings
 warnings.filterwarnings('ignore')
 
-# Add this directory to path for the shared plotting config (vendored alongside).
+# Add this directory to path for the shared plotting config.
 sys.path.insert(0, os.path.dirname(__file__))
 
 from plot_config import (
@@ -44,7 +41,7 @@ from plot_config import (
 )
 
 # Default figure output directory (callers override FIG_DIR before plotting).
-FIG_DIR = Path(__file__).resolve().parents[2] / 'figures'
+FIG_DIR = Path(__file__).resolve().parents[1] / 'figures'
 FIG_DIR.mkdir(exist_ok=True)
 
 def save_figure(fig, stem, aliases=()):
@@ -75,20 +72,15 @@ TRANSITION_X_JITTER = {
 # ============================================================
 
 def load_data():
-    """Load and prepare data for both experiments.
+    """Load and prepare the public datasets in manuscript display order."""
+    root = Path(__file__).resolve().parents[1]
 
-    EXPERIMENT SWAP:
-        df1  <-- E2.pkl  (new Exp 1: Dynamic Coherence)
-        df2  <-- E1.pkl  (new Exp 2: Fixed Coherence)
-    """
-    base = Path(os.path.dirname(__file__)) / '..'
-
-    # New Experiment 1 = Dynamic Coherence (old Exp 2, file E2.pkl)
-    df1 = pd.read_pickle(base / "Experiment2" / "Analysis" / "E2.pkl")
+    # Manuscript Experiment 1 = dynamic coherence.
+    df1 = pd.read_pickle(root / "data" / "experiment1" / "E1.pkl")
     df1 = df1[df1["is_outlier"] == False].copy()
 
-    # New Experiment 2 = Fixed Coherence (old Exp 1, file E1.pkl)
-    df2 = pd.read_pickle(base / "Experiment1" / "Analysis" / "E1.pkl")
+    # Manuscript Experiment 2 = fixed coherence.
+    df2 = pd.read_pickle(root / "data" / "experiment2" / "E2.pkl")
     df2 = df2[df2["is_outlier"] == False].copy()
 
     # Add grouping variables
@@ -702,92 +694,6 @@ def plot_fig5_cross_experiment(df1, df2, df_sdi_1, df_sdi_2):
 
 
 # ============================================================
-# MODEL LOADING
-# ============================================================
-
-def load_model_data(df1, df2):
-    """Load model results and prepare modelling dataframes.
-
-    Returns (MODEL_LOADED, results_df, df_model, best_exp1, best_exp2,
-             best_data_1, best_data_2) or (False, ...) on failure.
-    """
-    base = Path(os.path.dirname(__file__)) / '..'
-    MODEL_DIR = base / 'Modeling' / 'Kalman filter' / 'Output_135Model'
-    MODEL_CODE_DIR = base / 'Modeling' / 'Kalman filter'
-
-    sys.path.insert(0, str(MODEL_CODE_DIR))
-
-    try:
-        results_df = pd.read_csv(MODEL_DIR / '135model_fits.csv')
-
-        # EXPERIMENT SWAP for model results:
-        # The original model fits used exp=1 for Fixed and exp=2 for Dynamic.
-        # Remap so exp numbers match the new manuscript assignment.
-        results_df['exp'] = results_df['exp'].map({1: 2, 2: 1})
-
-        from three_state_135_nolog import (
-            C_AXIS, S_AXIS, B_AXIS,
-            get_best_model, rank_models, compare_axes,
-            generate_ppc_single_subject
-        )
-
-        print(f"Loaded model results: {len(results_df)} fits")
-        print(f"  Exp1: {len(results_df[results_df['exp'] == 1])} fits")
-        print(f"  Exp2: {len(results_df[results_df['exp'] == 2])} fits")
-
-        # Prepare data for modeling in correct format
-        same_set = {'HH', 'LL'}
-
-        # df1 = new Exp 1 (Dynamic Coherence, from E2.pkl)
-        exp1_model = (df1.assign(
-            exp=1,
-            Structure=lambda x: np.where(x['TransitionType'].isin(same_set), 'Same', 'Switch')
-        ).rename(columns={
-            'curDur': 'Duration', 'curBias': 'Bias', 'rpr': 'Reproduction',
-            'curCoherence': 'coherence', 'subID': 'Sub'
-        }).astype({'coherence': float, 'Sub': int}))
-
-        # df2 = new Exp 2 (Fixed Coherence, from E1.pkl)
-        exp2_model = (df2.assign(
-            exp=2,
-            Structure=lambda x: np.where(x['TransitionType'].isin(same_set), 'Same', 'Switch')
-        ).rename(columns={
-            'curDur': 'Duration', 'curBias': 'Bias', 'rpr': 'Reproduction',
-            'curCoherence': 'coherence', 'subID': 'Sub'
-        }).astype({'coherence': float, 'Sub': int}))
-
-        df_model = pd.concat([exp1_model, exp2_model], ignore_index=True)[[
-            'Sub', 'exp', 'trial_num', 'coherence', 'Structure',
-            'Duration', 'Bias', 'Reproduction'
-        ]]
-
-        # Add previous duration
-        df_model = df_model.sort_values(['Sub', 'exp', 'trial_num'])
-        df_model['preDur'] = df_model.groupby(['Sub', 'exp'])['Duration'].shift(1)
-
-        # Get best models
-        best_exp1, best_data_1 = get_best_model(results_df, exp_num=1, criterion='AIC')
-        best_exp2, best_data_2 = get_best_model(results_df, exp_num=2, criterion='AIC')
-
-        print(f"\nBest models:")
-        print(f"  Exp 1: {best_exp1}")
-        print(f"  Exp 2: {best_exp2}")
-
-        return (True, results_df, df_model, best_exp1, best_exp2,
-                best_data_1, best_data_2,
-                C_AXIS, S_AXIS, B_AXIS,
-                get_best_model, rank_models, compare_axes,
-                generate_ppc_single_subject)
-
-    except FileNotFoundError:
-        print("Model results not found. Run the Kalman filter notebook first.")
-        return (False,) + (None,) * 12
-    except ImportError as e:
-        print(f"Could not import three_state_135_nolog: {e}")
-        return (False,) + (None,) * 12
-
-
-# ============================================================
 # FIGURE C1 (was fig7): Model Comparison
 # ============================================================
 
@@ -1256,47 +1162,3 @@ def plot_fig8_trial_level_sd(df_model, results_df, best_exp1, best_exp2,
     save_figure(fig, 'fig8_trial_level_sd', aliases=('fig8_trial_level_serial_dependence',))
     plt.close()
     print(f"Saved fig8_trial_level_sd")
-
-
-# ============================================================
-# MAIN
-# ============================================================
-
-if __name__ == '__main__':
-    # ------ Load data ------
-    df1, df2 = load_data()
-
-    # ------ Compute SDI / CTI ------
-    df_sdi_1, df_sdi_2 = compute_sdi_dataframes(df1, df2)
-
-    # ------ Behavioral figures ------
-    plot_fig2_central_tendency(df1, df2)
-    plot_fig3_serial_dependence(df1, df2, df_sdi_1, df_sdi_2)
-    plot_fig4_sanity_check(df1, df2)
-    plot_fig5_cross_experiment(df1, df2, df_sdi_1, df_sdi_2)
-
-    # ------ Model figures ------
-    model_info = load_model_data(df1, df2)
-    MODEL_LOADED = model_info[0]
-
-    if MODEL_LOADED:
-        (_, results_df, df_model, best_exp1, best_exp2,
-         best_data_1, best_data_2,
-         C_AXIS, S_AXIS, B_AXIS,
-         get_best_model, rank_models, compare_axes,
-         generate_ppc_single_subject) = model_info
-
-        plot_figC1_model_comparison(results_df, C_AXIS, S_AXIS, B_AXIS, compare_axes)
-        plot_fig7_parameters(results_df, get_best_model)
-        ppc_results = plot_figC2_cti_sdi_recovery(
-            df_model, results_df, best_exp1, best_exp2,
-            generate_ppc_single_subject)
-        plot_fig8_trial_level_sd(
-            df_model, results_df, best_exp1, best_exp2,
-            generate_ppc_single_subject)
-    else:
-        print("Skipping model figures -- model results not loaded")
-
-    print("\n" + "=" * 60)
-    print("All figures generated.")
-    print("=" * 60)

@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Draft combined Figure 2/3 visualization.
+"""Generate the combined behavioral-results layout used for Figure 2.
 
-Goal: test a 3 x 2 layout that overlays observed group means (error bars)
-with lines reconstructed from participant-level joint current/previous-duration
-coefficients. Columns are manuscript Experiment 1/2; rows show central tendency,
-serial dependence, and coefficient summaries.
+The 3 x 2 layout overlays observed group means with lines reconstructed from
+participant-level joint current/previous-duration coefficients. Columns are
+manuscript Experiment 1/2; rows show central tendency, serial dependence, and
+coefficient summaries.
 
-This is an exploratory draft for discussion, not a canonical manuscript figure.
+This module retains the original combined central-tendency and serial-dependence
+implementation used by the public figure-generation entry point.
 """
 
 from pathlib import Path
@@ -19,7 +20,7 @@ import matplotlib.lines as mlines
 from scipy import stats
 import statsmodels.api as sm
 
-PROJECT = Path(__file__).resolve().parents[2]
+PROJECT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from plot_config import (  # noqa: E402
@@ -51,13 +52,9 @@ X_JITTER = {t: (i - (len(TRANSITION_ORDER) - 1) / 2) * 0.012 for i, t in enumera
 
 
 def load_data():
-    """Load manuscript-order experiments.
-
-    Manuscript Exp 1 = dynamic coherence = Experiment2/Analysis/E2.pkl.
-    Manuscript Exp 2 = fixed coherence = Experiment1/Analysis/E1.pkl.
-    """
-    df1 = pd.read_pickle(PROJECT / "Experiment2" / "Analysis" / "E2.pkl")
-    df2 = pd.read_pickle(PROJECT / "Experiment1" / "Analysis" / "E1.pkl")
+    """Load public datasets in manuscript display order."""
+    df1 = pd.read_pickle(PROJECT / "data" / "experiment1" / "E1.pkl")
+    df2 = pd.read_pickle(PROJECT / "data" / "experiment2" / "E2.pkl")
     df1 = df1.loc[df1["is_outlier"].eq(False)].copy()
     df2 = df2.loc[df2["is_outlier"].eq(False)].copy()
     for df in (df1, df2):
@@ -303,14 +300,13 @@ def main():
 
     fig.tight_layout(rect=(0, 0, 1, 0.955), h_pad=1.7, w_pad=1.4)
 
-    for out in [OUT_DIR / "combined_ct_sd_3x2_draft.png", FIG_DIR / "fig2_fig3_combined_3x2_draft.png"]:
-        fig.savefig(out, dpi=300, bbox_inches="tight")
-    for out in [OUT_DIR / "combined_ct_sd_3x2_draft.pdf", FIG_DIR / "fig2_fig3_combined_3x2_draft.pdf"]:
-        fig.savefig(out, bbox_inches="tight")
+    png_out = FIG_DIR / "fig2_behavioral_results_combined.png"
+    pdf_out = FIG_DIR / "fig2_behavioral_results_combined.pdf"
+    fig.savefig(png_out, dpi=300, bbox_inches="tight")
+    fig.savefig(pdf_out, bbox_inches="tight")
     plt.close(fig)
 
-    print(f"Saved draft figure: {OUT_DIR / 'combined_ct_sd_3x2_draft.png'}")
-    print(f"Saved manuscript copy: {FIG_DIR / 'fig2_fig3_combined_3x2_draft.png'}")
+    print(f"Saved Figure 2: {png_out}")
     print(f"Coefficient table: {OUT_DIR / 'participant_joint_coefficients_by_transition.csv'}")
 
 

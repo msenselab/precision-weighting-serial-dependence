@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """Regenerate the canonical Kalman manuscript figures (Fig 6, 7, B1, B2).
 
-Public-repo port of the manuscript figure pipeline
-(`regenerate_current_style_figures.py`). It reuses the manuscript plotting module
-vendored under ``code/figlib/generate_main_figures.py`` and the model package in
-``models/three_state_kalman/`` (identical to the manuscript's
-``three_state_135_nolog`` package).
+It uses the shared manuscript plotting module under
+``plotting/generate_main_figures.py`` and the model package in
+``models/three_state_kalman/``.
 
 Public model outputs already follow the manuscript display order
 (exp 1 = dynamic/ramped, exp 2 = fixed/constant), so no experiment remap is
@@ -15,6 +13,7 @@ canonical stems are copied into ``figures/``.
 
 from __future__ import annotations
 
+import argparse
 import importlib.util
 import shutil
 import sys
@@ -29,7 +28,7 @@ import pandas as pd
 
 
 ROOT = Path(__file__).resolve().parents[1]
-FIGLIB = ROOT / "code" / "figlib"
+PLOTTING = ROOT / "plotting"
 FIG_DIR = ROOT / "figures"
 FITS = ROOT / "results" / "kalman_model_fits" / "model_fits_deduplicated.csv"
 KALMAN_INPUT = ROOT / "results" / "kalman_model_fits" / "kalman_input_data.csv"
@@ -42,6 +41,10 @@ DUPLICATE_MAP = [
     ("fig8_trial_level_serial_dependence", "fig7_trial_level_serial_dependence"),
 ]
 CANONICAL_STEMS = [dst for _, dst in DUPLICATE_MAP]
+
+
+def parse_args() -> argparse.Namespace:
+    return argparse.ArgumentParser(description=__doc__).parse_args()
 
 
 def import_from_path(name: str, path: Path):
@@ -99,7 +102,9 @@ def duplicate(staging: Path, stem_from: str, stem_to: str) -> None:
 def main() -> None:
     staging = Path(tempfile.mkdtemp(prefix="kalman_figs_"))
 
-    main_figs = import_from_path("current_main_figures", FIGLIB / "generate_main_figures.py")
+    main_figs = import_from_path(
+        "current_main_figures", PLOTTING / "generate_main_figures.py"
+    )
     main_figs.FIG_DIR = staging
 
     (
@@ -134,4 +139,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    parse_args()
     main()
