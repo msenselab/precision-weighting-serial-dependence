@@ -1,3 +1,0 @@
-dataset,grouping,coefficient,contrast,N,mean_diff,sem_diff,t,p,dz
-experiment1,current_uncertainty,controlled_sdi_preDur,HighUncertainty - LowUncertainty,22,0.047718312697228794,0.013549875791518185,3.521678975618287,0.0020260171604278613,0.7508244803763111
-experiment2,SameSwitch,controlled_sdi_preDur,Same - Switch,22,0.02789754706534753,0.012325196718803957,2.263456535568766,0.03432349384889393,0.4825705548230492

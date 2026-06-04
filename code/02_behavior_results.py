@@ -58,7 +58,7 @@ def param_rows(result, dataset: str, model_name: str, formula: str, method: str)
                 "z": float(result.tvalues[param]),
                 "p": float(result.pvalues[param]),
                 "n_obs": int(result.nobs),
-                "n_subjects": int(result.model.groups.shape[0]),
+                "n_subjects": int(pd.Series(result.model.groups).nunique()),
                 "converged": bool(result.converged),
                 "fit_method": method,
             }
@@ -378,14 +378,14 @@ def main() -> None:
     subj_slopes, subj_contrasts = subject_slopes(valid)
     response_params, response_corrs, response_vifs = response_error_models(marked)
 
-    desc.to_csv(OUTDIR / "descriptives.csv", index=False)
-    lmm_params.to_csv(OUTDIR / "primary_dual_lmm_parameters.csv", index=False)
-    lmm_slopes.to_csv(OUTDIR / "primary_dual_lmm_slopes.csv", index=False)
-    subj_slopes.to_csv(OUTDIR / "participant_controlled_slopes.csv", index=False)
-    subj_contrasts.to_csv(OUTDIR / "participant_controlled_slope_contrasts.csv", index=False)
-    response_params.to_csv(OUTDIR / "response_error_lag_lmm_parameters.csv", index=False)
-    response_corrs.to_csv(OUTDIR / "response_error_collinearity_correlations.csv", index=False)
-    response_vifs.to_csv(OUTDIR / "response_error_vif.csv", index=False)
+    desc.to_csv(OUTDIR / "descriptives.csv", index=False, float_format="%.10g")
+    lmm_params.to_csv(OUTDIR / "primary_dual_lmm_parameters.csv", index=False, float_format="%.10g")
+    lmm_slopes.to_csv(OUTDIR / "primary_dual_lmm_slopes.csv", index=False, float_format="%.10g")
+    subj_slopes.to_csv(OUTDIR / "participant_controlled_slopes.csv", index=False, float_format="%.10g")
+    subj_contrasts.to_csv(OUTDIR / "participant_controlled_slope_contrasts.csv", index=False, float_format="%.10g")
+    response_params.to_csv(OUTDIR / "response_error_lag_lmm_parameters.csv", index=False, float_format="%.10g")
+    response_corrs.to_csv(OUTDIR / "response_error_collinearity_correlations.csv", index=False, float_format="%.10g")
+    response_vifs.to_csv(OUTDIR / "response_error_vif.csv", index=False, float_format="%.10g")
 
     write_markdown(desc, lmm_slopes, subj_contrasts, response_params, response_corrs, response_vifs)
     print((OUTDIR / "behavior_results_summary.md").read_text())
