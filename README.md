@@ -1,7 +1,6 @@
-# Precision-weighted updating and serial dependence in duration reproduction
+# Precision-weighted updating explains serial dependence across sensory and contextual transitions 
 
-Data, analysis code and stored results for the manuscript *Precision-Weighted Updating Explains Serial Dependence
-Across Sensory and Contextual Transitions* (Qu & Shi). Two duration-reproduction experiments varied the motion
+Data, analysis code and stored results for the manuscript *Precision-Weighted Updating Explains Serial Dependence Across Sensory and Contextual Transitions* (Qu & Shi). Two duration-reproduction experiments varied the motion
 coherence of the stimulus; a three-state Kalman filter accounts for central tendency and serial dependence.
 
 Everything reported in the manuscript can be regenerated from the files in this repository. Model fitting and the
