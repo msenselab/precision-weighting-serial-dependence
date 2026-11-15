@@ -1,0 +1,93 @@
+[
+  {
+    "nll": -16.312080263325207,
+    "success": true,
+    "status": 0,
+    "iterations": 112,
+    "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+  },
+  {
+    "nll": -5.426675033047024,
+    "success": true,
+    "status": 0,
+    "iterations": 45,
+    "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+  },
+  {
+    "nll": -3.276971979476466,
+    "success": true,
+    "status": 0,
+    "iterations": 31,
+    "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+  },
+  {
+    "nll": -3.27697197947636,
+    "success": true,
+    "status": 0,
+    "iterations": 21,
+    "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+  },
+  {
+    "nll": -15.034683223222514,
+    "success": true,
+    "status": 0,
+    "iterations": 91,
+    "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+  },
+  {
+    "nll": -16.3120826787375,
+    "success": true,
+    "status": 0,
+    "iterations": 134,
+    "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+  },
+  {
+    "nll": -5.426675032077821,
+    "success": true,
+    "status": 0,
+    "iterations": 44,
+    "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+  },
+  {
+    "nll": -16.312082953709904,
+    "success": true,
+    "status": 0,
+    "iterations": 134,
+    "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+  },
+  {
+    "nll": -16.31208361137327,
+    "success": true,
+    "status": 0,
+    "iterations": 112,
+    "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+  },
+  {
+    "nll": -5.426675033101342,
+    "success": true,
+    "status": 0,
+    "iterations": 39,
+    "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+  },
+  {
+    "nll": -9.922149227648386,
+    "success": true,
+    "status": 0,
+    "iterations": 20,
+    "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+  },
+  {
+    "nll": -5.426675028071557,
+    "success": true,
+    "status": 0,
+    "iterations": 53,
+    "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+  },
+  {
+    "nll": -16.312081481416595,
+    "success": true,
+    "status": 0,
+    "iterations": 152,
+    "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+  }
+]

@@ -1,0 +1,109 @@
+{
+  "seed": 20261103,
+  "cells": [
+    "LL",
+    "LH",
+    "HL",
+    "HH"
+  ],
+  "participant_counts": {
+    "Exp 1": 22,
+    "Exp 2": 22
+  },
+  "estimand": "Unweighted participant-average controlled previous-duration slopes; same frozen valid trials as the four-cell analyses.",
+  "primary": {
+    "delta": 0.02,
+    "min_gap": 0.02,
+    "prior_tau": 0.1
+  },
+  "settings": [
+    [
+      0.015,
+      0.015,
+      "meaningful_gap"
+    ],
+    [
+      0.015,
+      0.0,
+      "direction_only"
+    ],
+    [
+      0.02,
+      0.02,
+      "meaningful_gap"
+    ],
+    [
+      0.02,
+      0.0,
+      "direction_only"
+    ],
+    [
+      0.03,
+      0.03,
+      "meaningful_gap"
+    ],
+    [
+      0.03,
+      0.0,
+      "direction_only"
+    ]
+  ],
+  "prior_scales": [
+    0.05,
+    0.1,
+    0.2
+  ],
+  "kappa0": 1.0,
+  "nu0": 5.0,
+  "statistical_model": "Participant contrast vectors iid MVN(mu,Sigma); proper NIW prior with mean 0, Psi0=kappa0*(nu0-3+1)*tau^2 I.",
+  "contrast_transform": [
+    [
+      0.5,
+      -0.5,
+      0.5,
+      -0.5
+    ],
+    [
+      0.5,
+      0.5,
+      -0.5,
+      -0.5
+    ],
+    [
+      0.5,
+      -0.5,
+      -0.5,
+      0.5
+    ]
+  ],
+  "posterior_calculation": "Exact conjugate multivariate-t marginal mean, including covariance uncertainty; Monte Carlo region integration.",
+  "bayes_factor": "P(H|data,U) / P(H|U); prior conditioned on the SAME complete constraint region. No normalization to mechanism probabilities.",
+  "mc_draws": 1000000,
+  "prior_draws": 2000000,
+  "bootstrap_draws": 100000,
+  "leave_one_out_draws": 100000,
+  "mc_intervals": "97.5% binomial intervals for numerical integration; not data confidence intervals. Ratio bounds have >=95% joint MC coverage.",
+  "approximate_equalities": "Every within-group pair must differ by <= delta; not a chain of adjacent comparisons.",
+  "ordering": "Every member of a higher group must exceed every member of a lower group by > min_gap.",
+  "overlap": "direction_only regions may overlap; probability masses must not be normalized or summed as competing mechanism probabilities.",
+  "limitations": [
+    "Post hoc analysis; equality/gap bounds and proper priors are sensitivity assumptions, not preregistered choices.",
+    "Three behavioral predictions are not uniquely identified cognitive mechanisms.",
+    "The contextual-reset hypothesis was prompted by the observed transition pattern.",
+    "Different within-experiment compatibility or BF rankings do not establish a cross-experiment mechanism difference.",
+    "The NIW population model treats participant slope vectors as observations; it is not a trial-level hierarchical Kalman analysis."
+  ],
+  "input_sha256": {
+    "preprocessing_recheck_20260527\\outputs\\E2_reprocessed.csv": "a3aa977e2e831413bebe29e25464b9739850f761cb0640a554d2abbccdc8da0e",
+    "preprocessing_recheck_20260527\\outputs\\E1_reprocessed.csv": "3496e60b12309cabe4709a795ce9e16d7bb50b2d018a61c933fa90cec85ccba2"
+  },
+  "source_sha256": "35e584c371a7aec09959f6465a46f8a7f3874ac391e312ebb79ccd0c78d143d9",
+  "legacy_sha256": "d127efa1ff20667fadd4959984a1f390db5c294c977ed2761cec1a28d5e5c9d9",
+  "other_analysis_csvs_unchanged": {
+    "generalized_weber.csv": "e87d313ae4667a1d5883501c2cb9d52ab73120b46a7316502e11342cf482ab6f",
+    "individual_differences.csv": "75fea0ffd2fb6141032b1da79e8defa19bf56aafbcb2c108899b8b57e0246994",
+    "null_claims.csv": "23377cc104149c7b24093fb248cd2266fe68daf43871aaef975c06a174c2393c",
+    "random_slope_check.csv": "0736786c2e1edf259b215bdd162040a5abeab2412d0e643dd6e318d8b8228335"
+  },
+  "no_kalman_refits": true
+}

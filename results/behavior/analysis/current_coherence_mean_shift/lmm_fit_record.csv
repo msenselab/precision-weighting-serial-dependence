@@ -1,0 +1,4 @@
+experiment,analysis,n_trials,n_participants,optimizer,converged,warnings
+Exp1_dynamic,within-experiment LMM,4693,22,lbfgs,True,The MLE may be on the boundary of the parameter space.
+Exp2_fixed,within-experiment LMM,4654,22,lbfgs,True,The MLE may be on the boundary of the parameter space.
+combined,combined LMM interaction,9347,44,lbfgs,True,The MLE may be on the boundary of the parameter space.

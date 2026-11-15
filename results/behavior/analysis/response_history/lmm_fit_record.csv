@@ -1,0 +1,3 @@
+experiment,n_trials,n_participants,optimizer,converged,warnings
+Exp1_dynamic,2802,22,lbfgs,True,Random effects covariance is singular | The MLE may be on the boundary of the parameter space.
+Exp2_fixed,2659,22,lbfgs,True,Random effects covariance is singular | The MLE may be on the boundary of the parameter space.

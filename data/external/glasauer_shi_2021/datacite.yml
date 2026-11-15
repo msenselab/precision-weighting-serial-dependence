@@ -1,0 +1,79 @@
+# Metadata for DOI registration according to DataCite Metadata Schema 4.1.
+# For detailed schema description see https://doi.org/10.5438/0014
+
+## Required fields
+
+# The main researchers involved. Include digital identifier (e.g., ORCID)
+# if possible, including the prefix to indicate its type.
+authors:
+  -
+    firstname: "Stefan"
+    lastname: "Glasauer"
+    affiliation: "Brandenburg University of Technology Cottbus-Senftenberg"
+    id: "ORCID:0000-0002-4313-6210"
+  -
+    firstname: "Zhuanghua"
+    lastname: "Shi"
+    affiliation: "Ludwig-Maximilians-Universität Munich"
+    id: "ORCID:0000-0003-2388-6695"
+
+# A title to describe the published resource.
+title: "Duration Reproduction Data"
+
+# Additional information about the resource, e.g., a brief abstract.
+description: |
+  Data is stored in the Matlab file rep_randwalk.mat, the other files contain Matlab code 
+  for analysis and simulation. Run data_fit_paper.m.
+  - rep_randwalk.mat - experimental data of duration reproduction.
+  - data_fit_paper.m - simulate and fit the experimental data
+  - fitdata1pv.m and kmodel1pv.m - optimization functions
+
+
+# Lit of keywords the resource should be associated with.
+# Give as many keywords as possible, to make the resource findable.
+keywords:
+  - Neuroscience
+  - Psychophysics
+  - Duration Estimation
+  - Perception
+  - Magnitude
+
+# License information for this resource. Please provide the license name and/or a link to the license.
+# Please add also a corresponding LICENSE file to the repository.
+license:
+  name: "Creative Commons Attribution-ShareAlike 4.0 International Public License"
+  url: "https://creativecommons.org/licenses/by-sa/4.0/legalcode"
+
+
+
+## Optional Fields
+
+# Funding information for this resource.
+# Separate funder name and grant number by comma.
+funding:
+  - "DFG, GL 342/3-2"
+  - "DFG, SH 166/3-2"
+
+
+# Related publications. reftype might be: IsSupplementTo, IsDescribedBy, IsReferencedBy.
+# Please provide digital identifier (e.g., DOI) if possible.
+# Add a prefix to the ID, separated by a colon, to indicate the source.
+# Supported sources are: DOI, arXiv, PMID
+# In the citation field, please provide the full reference, including title, authors, journal etc.
+references:
+  -
+    id: "doi:10.1002/pchj.464"
+    reftype: "IsSupplementTo"
+    citation: "Glasauer S, Shi Z (2021) The origin of Vierordt's law: the experimental protocol matters. PsyCh J 10"
+  -
+    id: "doi:10.1101/2021.07.13.452167"
+    reftype: "IsUsedBy"
+    citation: "Glasauer S, Shi Z (2021) Individual beliefs about temporal continuity explain variation of perceptual biases. bioRxiv"
+
+
+
+# Resource type. Default is Dataset, other possible values are Software, DataPaper, Image, Text.
+resourcetype: Dataset
+
+# Do not edit or remove the following line
+templateversion: 1.2

@@ -1,0 +1,82 @@
+{
+  "seed": 20261113,
+  "local_reps": 20,
+  "range_n": 200,
+  "starts": 12,
+  "total_starts": 13,
+  "units": 1280,
+  "environment": {
+    "GKF_SCALE": "lin",
+    "GKF_LIK": "gh",
+    "GKF_CORE": "reduced",
+    "GKF_BOUNDS": "v3",
+    "GKF_INIT": "gs",
+    "GKF_NOISELESS": "1",
+    "GKF_QDIAG": "1",
+    "GKF_READOUT": "1"
+  },
+  "parameters": {
+    "lq1": {
+      "label": "$\\sigma_{q_1}$ (s)",
+      "meaning": "Fast innovation SD",
+      "unit": "s"
+    },
+    "lq2": {
+      "label": "$\\sigma_{q_2}$ (s)",
+      "meaning": "Slow innovation SD",
+      "unit": "s"
+    },
+    "beta": {
+      "label": "$\\phi^L$",
+      "meaning": "Low readout continuity",
+      "unit": ""
+    },
+    "wuH": {
+      "label": "$\\phi^H$",
+      "meaning": "High readout continuity",
+      "unit": ""
+    },
+    "lam": {
+      "label": "$\\lambda$",
+      "meaning": "Bias persistence",
+      "unit": ""
+    },
+    "lq3": {
+      "label": "$\\sigma_{q_3}$ (s)",
+      "meaning": "Baseline bias innovation SD",
+      "unit": "s"
+    },
+    "d0": {
+      "label": "$d_0$ (s)",
+      "meaning": "Baseline response offset",
+      "unit": "s"
+    },
+    "ad0": {
+      "label": "$\\Delta d_0$ (s)",
+      "meaning": "Low minus High response offset",
+      "unit": "s"
+    },
+    "lsde": {
+      "label": "$\\sigma_e$ (s)",
+      "meaning": "Response noise SD",
+      "unit": "s"
+    },
+    "aq3": {
+      "label": "$\\rho_{q_3}$",
+      "meaning": "Low/High bias variance ratio",
+      "unit": "ratio"
+    }
+  },
+  "sources": {
+    "src/sdu/model/engine.py": "6001f1600b661e5a7adbad21c42f70a8e19db277297b5e6a8b13c4e740370b26",
+    "src/sdu/model/fitting.py": "97983dd40cb7b0dde8fff91a773be57d2ecba91d2bf2ddb7942f1fbed4d26308",
+    "src/sdu/paths.py": "db39f59b86fbf808605caf352183e614c539497c2d113fa896d4e1d13fa9d39d",
+    "scripts/model/fit_minimal_space.py": "cd0da7dd0e383b2d5ded1ec2eb58140a11a1654dfd47098ae05e7df84f44449c",
+    "scripts/model/recovery_v3_common.py": "17da16e0a40f9d31adfe417c8ea4a867226a4f2ab371bd920d66d0a9151afa94",
+    "scripts/model/parameter_recovery_v3.py": "7f68297a2877afac34d5239fbfd5d97dea5618f87d80f59054d89a7ada5dd8b0",
+    "data/processed/model_input/input_full_sequence.csv": "0ae6662b56da85e8044338d066ba4bd3c35be61f5594ef306a71263a430722a2"
+  },
+  "design_sha256": "bcd318c34e257e9181535bb8cda1c5e1d4783c0847c079e0a50aee41e48e2d89",
+  "sequence": "Full observed sequence and response mask, identical to the main fits",
+  "correlations": "Across 22 participants within each fitted-design repetition; across 200 range draws"
+}

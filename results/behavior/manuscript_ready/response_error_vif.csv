@@ -1,0 +1,15 @@
+dataset,n,predictor,vif
+manuscript_exp1_dynamic,2936,curDur_c,1.001810381442835
+manuscript_exp1_dynamic,2936,preDur_c,1.2917373710647635
+manuscript_exp1_dynamic,2936,response_error_lag1,1.5587900957482663
+manuscript_exp1_dynamic,2936,response_error_lag2,1.2333303906253426
+manuscript_exp1_dynamic,2936,response_error_lag3,1.238561411320449
+manuscript_exp1_dynamic,2936,response_error_lag4,1.2170364598407382
+manuscript_exp1_dynamic,2936,response_error_lag5,1.19818268483202
+manuscript_exp2_fixed,2771,curDur_c,1.0009222990172308
+manuscript_exp2_fixed,2771,preDur_c,1.401947231108306
+manuscript_exp2_fixed,2771,response_error_lag1,1.4516156536224687
+manuscript_exp2_fixed,2771,response_error_lag2,1.0363719371767746
+manuscript_exp2_fixed,2771,response_error_lag3,1.0426841344267055
+manuscript_exp2_fixed,2771,response_error_lag4,1.0468900211285415
+manuscript_exp2_fixed,2771,response_error_lag5,1.0417526010417228

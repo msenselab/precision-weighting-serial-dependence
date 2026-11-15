@@ -1,0 +1,91 @@
+experiment,method,prior_tau,delta,min_gap,component,probability,mc_successes,mc_draws
+Exp 1,normal_sampling,,0.02,0.02,reliability: HL exceeds both middle cells,0.534145,534145,1000000
+Exp 1,normal_sampling,,0.02,0.02,reliability: both middle cells exceed LH,0.306126,306126,1000000
+Exp 1,normal_sampling,,0.02,0.02,reliability: LL and HH approximately equal,0.21961,219610,1000000
+Exp 1,normal_sampling,,0.02,0.02,current: HL and LL approximately equal,0.446871,446871,1000000
+Exp 1,normal_sampling,,0.02,0.02,current: HH and LH approximately equal,0.574545,574545,1000000
+Exp 1,normal_sampling,,0.02,0.02,current: both current-L cells exceed both current-H cells,0.701683,701683,1000000
+Exp 1,normal_sampling,,0.02,0.02,reset: LL exceeds each other cell,0.013735,13735,1000000
+Exp 1,normal_sampling,,0.02,0.02,reset: all other cells pairwise approximately equal,0.003255,3255,1000000
+Exp 1,normal_sampling,,0.02,0.02,flat: all four cells pairwise approximately equal,0.000946,946,1000000
+Exp 1,participant_bootstrap,,0.02,0.02,reliability: HL exceeds both middle cells,0.52467,52467,100000
+Exp 1,participant_bootstrap,,0.02,0.02,reliability: both middle cells exceed LH,0.30112,30112,100000
+Exp 1,participant_bootstrap,,0.02,0.02,reliability: LL and HH approximately equal,0.2159,21590,100000
+Exp 1,participant_bootstrap,,0.02,0.02,current: HL and LL approximately equal,0.46191,46191,100000
+Exp 1,participant_bootstrap,,0.02,0.02,current: HH and LH approximately equal,0.58375,58375,100000
+Exp 1,participant_bootstrap,,0.02,0.02,current: both current-L cells exceed both current-H cells,0.71747,71747,100000
+Exp 1,participant_bootstrap,,0.02,0.02,reset: LL exceeds each other cell,0.00852,852,100000
+Exp 1,participant_bootstrap,,0.02,0.02,reset: all other cells pairwise approximately equal,0.00251,251,100000
+Exp 1,participant_bootstrap,,0.02,0.02,flat: all four cells pairwise approximately equal,0.00099,99,100000
+Exp 2,normal_sampling,,0.02,0.02,reliability: HL exceeds both middle cells,1.2e-05,12,1000000
+Exp 2,normal_sampling,,0.02,0.02,reliability: both middle cells exceed LH,0.270237,270237,1000000
+Exp 2,normal_sampling,,0.02,0.02,reliability: LL and HH approximately equal,0.131493,131493,1000000
+Exp 2,normal_sampling,,0.02,0.02,current: HL and LL approximately equal,0.031655,31655,1000000
+Exp 2,normal_sampling,,0.02,0.02,current: HH and LH approximately equal,0.490649,490649,1000000
+Exp 2,normal_sampling,,0.02,0.02,current: both current-L cells exceed both current-H cells,0.090974,90974,1000000
+Exp 2,normal_sampling,,0.02,0.02,reset: LL exceeds each other cell,0.809352,809352,1000000
+Exp 2,normal_sampling,,0.02,0.02,reset: all other cells pairwise approximately equal,0.231235,231235,1000000
+Exp 2,normal_sampling,,0.02,0.02,flat: all four cells pairwise approximately equal,0.001552,1552,1000000
+Exp 2,participant_bootstrap,,0.02,0.02,reliability: HL exceeds both middle cells,1e-05,1,100000
+Exp 2,participant_bootstrap,,0.02,0.02,reliability: both middle cells exceed LH,0.26949,26949,100000
+Exp 2,participant_bootstrap,,0.02,0.02,reliability: LL and HH approximately equal,0.13201,13201,100000
+Exp 2,participant_bootstrap,,0.02,0.02,current: HL and LL approximately equal,0.02571,2571,100000
+Exp 2,participant_bootstrap,,0.02,0.02,current: HH and LH approximately equal,0.49573,49573,100000
+Exp 2,participant_bootstrap,,0.02,0.02,current: both current-L cells exceed both current-H cells,0.08612,8612,100000
+Exp 2,participant_bootstrap,,0.02,0.02,reset: LL exceeds each other cell,0.81444,81444,100000
+Exp 2,participant_bootstrap,,0.02,0.02,reset: all other cells pairwise approximately equal,0.23515,23515,100000
+Exp 2,participant_bootstrap,,0.02,0.02,flat: all four cells pairwise approximately equal,0.00114,114,100000
+Exp 1,niw_posterior,0.05,0.02,0.02,reliability: HL exceeds both middle cells,0.514628,514628,1000000
+Exp 1,niw_posterior,0.05,0.02,0.02,reliability: both middle cells exceed LH,0.287209,287209,1000000
+Exp 1,niw_posterior,0.05,0.02,0.02,reliability: LL and HH approximately equal,0.229558,229558,1000000
+Exp 1,niw_posterior,0.05,0.02,0.02,current: HL and LL approximately equal,0.463944,463944,1000000
+Exp 1,niw_posterior,0.05,0.02,0.02,current: HH and LH approximately equal,0.6021,602100,1000000
+Exp 1,niw_posterior,0.05,0.02,0.02,current: both current-L cells exceed both current-H cells,0.685126,685126,1000000
+Exp 1,niw_posterior,0.05,0.02,0.02,reset: LL exceeds each other cell,0.014514,14514,1000000
+Exp 1,niw_posterior,0.05,0.02,0.02,reset: all other cells pairwise approximately equal,0.004837,4837,1000000
+Exp 1,niw_posterior,0.05,0.02,0.02,flat: all four cells pairwise approximately equal,0.001574,1574,1000000
+Exp 2,niw_posterior,0.05,0.02,0.02,reliability: HL exceeds both middle cells,6.3e-05,63,1000000
+Exp 2,niw_posterior,0.05,0.02,0.02,reliability: both middle cells exceed LH,0.253134,253134,1000000
+Exp 2,niw_posterior,0.05,0.02,0.02,reliability: LL and HH approximately equal,0.130362,130362,1000000
+Exp 2,niw_posterior,0.05,0.02,0.02,current: HL and LL approximately equal,0.036286,36286,1000000
+Exp 2,niw_posterior,0.05,0.02,0.02,current: HH and LH approximately equal,0.523235,523235,1000000
+Exp 2,niw_posterior,0.05,0.02,0.02,current: both current-L cells exceed both current-H cells,0.082151,82151,1000000
+Exp 2,niw_posterior,0.05,0.02,0.02,reset: LL exceeds each other cell,0.808268,808268,1000000
+Exp 2,niw_posterior,0.05,0.02,0.02,reset: all other cells pairwise approximately equal,0.266036,266036,1000000
+Exp 2,niw_posterior,0.05,0.02,0.02,flat: all four cells pairwise approximately equal,0.002208,2208,1000000
+Exp 1,niw_posterior,0.1,0.02,0.02,reliability: HL exceeds both middle cells,0.509638,509638,1000000
+Exp 1,niw_posterior,0.1,0.02,0.02,reliability: both middle cells exceed LH,0.296852,296852,1000000
+Exp 1,niw_posterior,0.1,0.02,0.02,reliability: LL and HH approximately equal,0.245953,245953,1000000
+Exp 1,niw_posterior,0.1,0.02,0.02,current: HL and LL approximately equal,0.456194,456194,1000000
+Exp 1,niw_posterior,0.1,0.02,0.02,current: HH and LH approximately equal,0.571129,571129,1000000
+Exp 1,niw_posterior,0.1,0.02,0.02,current: both current-L cells exceed both current-H cells,0.64739,647390,1000000
+Exp 1,niw_posterior,0.1,0.02,0.02,reset: LL exceeds each other cell,0.023733,23733,1000000
+Exp 1,niw_posterior,0.1,0.02,0.02,reset: all other cells pairwise approximately equal,0.007367,7367,1000000
+Exp 1,niw_posterior,0.1,0.02,0.02,flat: all four cells pairwise approximately equal,0.002441,2441,1000000
+Exp 2,niw_posterior,0.1,0.02,0.02,reliability: HL exceeds both middle cells,0.000188,188,1000000
+Exp 2,niw_posterior,0.1,0.02,0.02,reliability: both middle cells exceed LH,0.261805,261805,1000000
+Exp 2,niw_posterior,0.1,0.02,0.02,reliability: LL and HH approximately equal,0.135814,135814,1000000
+Exp 2,niw_posterior,0.1,0.02,0.02,current: HL and LL approximately equal,0.047728,47728,1000000
+Exp 2,niw_posterior,0.1,0.02,0.02,current: HH and LH approximately equal,0.501874,501874,1000000
+Exp 2,niw_posterior,0.1,0.02,0.02,current: both current-L cells exceed both current-H cells,0.090407,90407,1000000
+Exp 2,niw_posterior,0.1,0.02,0.02,reset: LL exceeds each other cell,0.789417,789417,1000000
+Exp 2,niw_posterior,0.1,0.02,0.02,reset: all other cells pairwise approximately equal,0.24314,243140,1000000
+Exp 2,niw_posterior,0.1,0.02,0.02,flat: all four cells pairwise approximately equal,0.003385,3385,1000000
+Exp 1,niw_posterior,0.2,0.02,0.02,reliability: HL exceeds both middle cells,0.492981,492981,1000000
+Exp 1,niw_posterior,0.2,0.02,0.02,reliability: both middle cells exceed LH,0.320726,320726,1000000
+Exp 1,niw_posterior,0.2,0.02,0.02,reliability: LL and HH approximately equal,0.274909,274909,1000000
+Exp 1,niw_posterior,0.2,0.02,0.02,current: HL and LL approximately equal,0.417892,417892,1000000
+Exp 1,niw_posterior,0.2,0.02,0.02,current: HH and LH approximately equal,0.482177,482177,1000000
+Exp 1,niw_posterior,0.2,0.02,0.02,current: both current-L cells exceed both current-H cells,0.549486,549486,1000000
+Exp 1,niw_posterior,0.2,0.02,0.02,reset: LL exceeds each other cell,0.061806,61806,1000000
+Exp 1,niw_posterior,0.2,0.02,0.02,reset: all other cells pairwise approximately equal,0.018078,18078,1000000
+Exp 1,niw_posterior,0.2,0.02,0.02,flat: all four cells pairwise approximately equal,0.005695,5695,1000000
+Exp 2,niw_posterior,0.2,0.02,0.02,reliability: HL exceeds both middle cells,0.002376,2376,1000000
+Exp 2,niw_posterior,0.2,0.02,0.02,reliability: both middle cells exceed LH,0.286044,286044,1000000
+Exp 2,niw_posterior,0.2,0.02,0.02,reliability: LL and HH approximately equal,0.150276,150276,1000000
+Exp 2,niw_posterior,0.2,0.02,0.02,current: HL and LL approximately equal,0.087227,87227,1000000
+Exp 2,niw_posterior,0.2,0.02,0.02,current: HH and LH approximately equal,0.437643,437643,1000000
+Exp 2,niw_posterior,0.2,0.02,0.02,current: both current-L cells exceed both current-H cells,0.115206,115206,1000000
+Exp 2,niw_posterior,0.2,0.02,0.02,reset: LL exceeds each other cell,0.726039,726039,1000000
+Exp 2,niw_posterior,0.2,0.02,0.02,reset: all other cells pairwise approximately equal,0.180863,180863,1000000
+Exp 2,niw_posterior,0.2,0.02,0.02,flat: all four cells pairwise approximately equal,0.006668,6668,1000000
