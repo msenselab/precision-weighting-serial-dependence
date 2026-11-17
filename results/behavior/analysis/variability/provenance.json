@@ -1,0 +1,14 @@
+{
+  "inputs": [
+    "data/processed/preprocessing/experiment1_ramped.pkl",
+    "data/processed/preprocessing/experiment2_constant.pkl"
+  ],
+  "filter": "~is_outlier and nonmissing rpr",
+  "estimand": "equal-duration-weighted within-participant SD(rpr) in participant x duration x current-coherence cells; paired L-H",
+  "sensitivity": "within-cell median absolute deviation with same weighting",
+  "packages": {
+    "pandas": "3.0.2",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1"
+  }
+}

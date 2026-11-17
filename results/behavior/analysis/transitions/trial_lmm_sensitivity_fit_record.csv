@@ -1,0 +1,11 @@
+experiment,specification,converged,method,warnings
+Exp1_ramped,RI,True,lbfgs,Random effects covariance is singular
+Exp1_ramped,RI_cur,True,lbfgs,
+Exp1_ramped,RI_pre,True,lbfgs,The MLE may be on the boundary of the parameter space.
+Exp1_ramped,RI_cur_pre,True,lbfgs,The MLE may be on the boundary of the parameter space.
+Exp1_ramped,OLS_cluster,True,OLS cluster-robust,
+Exp2_constant,RI,True,lbfgs,Random effects covariance is singular | The MLE may be on the boundary of the parameter space.
+Exp2_constant,RI_cur,True,lbfgs,The MLE may be on the boundary of the parameter space.
+Exp2_constant,RI_pre,True,lbfgs,The MLE may be on the boundary of the parameter space.
+Exp2_constant,RI_cur_pre,True,lbfgs,The MLE may be on the boundary of the parameter space.
+Exp2_constant,OLS_cluster,True,OLS cluster-robust,

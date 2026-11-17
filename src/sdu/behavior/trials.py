@@ -1,8 +1,4 @@
-"""Behavioural statistics of the main text applied to data and to simulated responses (2026-10-31).
-
-The functions are the ones the predictive checks used from ppc_manuscript_figures.py and mechanism_knockout.py (now
-archived with the models they were written for); the statistics are unchanged.
-"""
+"""Trial tables of the two experiments and the duration-resolved signatures used by the predictive checks."""
 from pathlib import Path
 
 import numpy as np
@@ -10,7 +6,7 @@ import pandas as pd
 
 from sdu import paths as SP
 
-DATA = {1: SP.PREPROCESSED / "E1_reprocessed.csv", 2: SP.PREPROCESSED / "E2_reprocessed.csv"}   # data code -> file
+DATA = SP.PREPROCESSED_EXP                                                 # experiment -> trial file
 
 
 def lab(c):
@@ -54,6 +50,6 @@ def contrasts(v):
     low_high = b2[["HL", "LL"]].mean(axis=1) - b2[["LH", "HH"]].mean(axis=1)
     same_switch = b2[["LL", "HH"]].mean(axis=1) - b2[["LH", "HL"]].mean(axis=1)
     out = pd.DataFrame({"low_high": low_high, "same_switch": same_switch})
-    for cell in ("LL", "LH", "HL", "HH"):                  # the four transitions (2026-11-03)
+    for cell in ("LL", "LH", "HL", "HH"):                  # the four transitions
         out[f"tr_{cell}"] = b2[cell]
     return out

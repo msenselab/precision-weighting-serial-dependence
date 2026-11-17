@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Is the current-coherence effect on history a response-repetition effect? (2026-11-02)
+"""Is the current-coherence effect on history a response-repetition effect? (Appendix A.2, Figure A2B)
 
-Extends response_history_reanalysis.py (same block-safe lags and masking) with the current coherence. If participants
+Extends response_history.py (same block-safe lags and masking) with the current coherence. If participants
 partly repeated their previous reproduction under low coherence, the previous response error would predict the
 current bias more strongly under low coherence (response error lag 1 x current coherence), beyond the previous
 duration. The stimulus-history effect of the manuscript is previous duration x current coherence.
@@ -21,7 +21,7 @@ import pandas as pd
 import statsmodels.formula.api as smf
 from scipy import stats
 
-import response_history_reanalysis as RH
+import response_history as RH
 
 FORMULA = ("curBias ~ (curDur_c + preDur_c + response_error_lag1) * low + response_error_lag2 + response_error_lag3"
            " + response_error_lag4 + response_error_lag5")

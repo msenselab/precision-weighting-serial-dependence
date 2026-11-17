@@ -1,3 +1,0 @@
-random,optimizer,b,se,p
-~curDur_c + preDur_c,lbfgs,0.04753984338306588,0.020086573668152873,0.017945182333633968
-~curDur_c + preDur_c + current_low + preDur_c:current_low,lbfgs,0.04542914776744234,0.020321774588161715,0.025385120305166698

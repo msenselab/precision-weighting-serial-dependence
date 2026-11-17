@@ -1,5 +1,5 @@
 experiment,variables,r
-Exp1_dynamic,previous duration vs previous reproduced duration,0.5967766155638772
-Exp1_dynamic,previous duration vs previous response error,-0.4267077059776598
-Exp2_fixed,previous duration vs previous reproduced duration,0.5755233643229918
-Exp2_fixed,previous duration vs previous response error,-0.5258953717593935
+Exp1_ramped,previous duration vs previous reproduced duration,0.5967766155638772
+Exp1_ramped,previous duration vs previous response error,-0.4267077059776598
+Exp2_constant,previous duration vs previous reproduced duration,0.5755233643229918
+Exp2_constant,previous duration vs previous response error,-0.5258953717593935

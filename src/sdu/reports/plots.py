@@ -5,7 +5,7 @@ import numpy as np
 INK, MUTED, GRID = "#0b0b0b", "#52514e", "#e6e5e1"
 BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
 COH = {"Low": "#E8503A", "High": "#4BB8D3"}
-EXP_COL = {2: "#26ae96", 1: "#98a3c1"}              # data code 2 = Experiment 1, 1 = Experiment 2
+EXP_COL = {1: "#26ae96", 2: "#98a3c1"}              # Experiment 1, Experiment 2
 SAME_SWITCH = {"Same": "#33508a", "Switch": "#f08a6b"}
 
 
@@ -54,13 +54,13 @@ def grouped_bars(ax, groups, items, ylabel, log=False, legend_loc="upper right")
 
 
 def model_line(ax, x, mean, lo, hi, color, label):
-    """Model: dashed line with a band (the 3SKF v3 §3.3 style)."""
+    """Model: dashed line with a band."""
     ax.fill_between(x, lo, hi, color=color, alpha=.18, lw=0)
     ax.plot(x, mean, "--", color=color, lw=2.2, label=label)
 
 
 def observed_points(ax, x, mean, sem, color=INK, label="Observed", ms=7):
-    """Data: points with error bars (the 3SKF v3 §3.3 style)."""
+    """Data: points with error bars."""
     ax.errorbar(x, mean, sem, fmt="o", ms=ms, color=color, capsize=3, lw=1.4, zorder=5, label=label)
 
 

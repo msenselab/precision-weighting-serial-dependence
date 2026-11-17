@@ -1,2 +1,0 @@
-exp,Sub,model,original_phi_high,refitted_phi_high,original_LL,refitted_LL,LL_improvement,grid_support_min,grid_support_max,grid_support_width,loss_at_zero,loss_at_one,profile_points,full_fit_success
-2,730111,C3-R-S0-B2,0.1380687408674178,0.13806873937824557,73.65035643428567,73.65035643460016,3.1448621484742034e-10,0.0,0.6000000000000001,0.6000000000000001,0.2571956712269241,9.897620998943239,12,True

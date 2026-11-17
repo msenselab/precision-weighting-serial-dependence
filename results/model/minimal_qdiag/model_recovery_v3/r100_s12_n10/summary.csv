@@ -1,5 +1,0 @@
-analysis,generator,cohorts,AIC correct,generator passes focal,other passes focal,generator only passes focal,median focal z (generator),median focal z (other)
-phi,shared,100,1.0,0.85,0.97,0.0,-0.03646385822484059,0.07554645986160907
-phi,specific,100,0.0,0.96,0.51,0.45,-0.4170146971946714,-1.4597096890355357
-switch,S0,100,0.99,0.94,0.64,0.33,0.13542516579138114,1.2380891013884652
-switch,S3,100,0.91,0.95,0.61,0.39,0.04444365505229435,-1.2388142591730458

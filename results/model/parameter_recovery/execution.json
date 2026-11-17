@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-13",
+  "initial_array_tasks": 32,
+  "observed_parameter_datasets": 880,
+  "exploratory_sampled_parameter_datasets": 400,
+  "datasets_total": 1280,
+  "refined_units": [
+    579,
+    837
+  ],
+  "additional_starts_per_refined_unit": 49,
+  "generating_parameter_values_used_as_starts": false
+}

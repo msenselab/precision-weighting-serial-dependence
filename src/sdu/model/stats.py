@@ -9,7 +9,7 @@ current-duration slope (central tendency).
   groups                                            minimum trials   source in the manuscript
   current coherence Low / High                      10               Section 4.1 (participant-level check)
   Same / Switch (previous = current coherence)      10               Section 4.1 (Experiment 2)
-  transition LL, LH, HL, HH (previous, current)     5                Tables A1a-c, Figure 6, Appendix C.7
+  transition LL, LH, HL, HH (previous, current)     5                Tables A1a-c, Appendix A.1
 
 Contrasts (participant level, then averaged over participants):
   low_high        b2_Low - b2_High                      Experiment 1 core effect (main text .0477)
@@ -28,9 +28,9 @@ has none. Valid current trials are those with a response that passed the exclusi
 import numpy as np
 import pandas as pd
 
-from sdu.model import fitting as FF
+from sdu import paths as SP
 
-CORE = {2: ["low_high"], 1: ["LL_other_three"]}             # data code 2 = Experiment 1, 1 = Experiment 2
+CORE = {1: ["low_high"], 2: ["LL_other_three"]}             # experiment -> its focal contrast
 MIN_GROUP, MIN_CELL = 10, 5
 KEYS = ["b1_Low", "b1_High", "b2_Low", "b2_High", "rsd_Low", "rsd_High", "b2_Same", "b2_Switch",
         "b2_LL", "b2_LH", "b2_HL", "b2_HH", "low_high", "low_high_cells", "LL_other_three", "LL_HL",
@@ -106,7 +106,7 @@ def participant_stats(T, y, coh, valid, block_start):
 
 
 def _sequence(exp):
-    d = pd.read_csv(FF.DATA)
+    d = pd.read_csv(SP.MODEL_INPUT)
     d = d[d.exp == exp].sort_values(["Sub", "trial_num"])
     return {s: g for s, g in d.groupby("Sub")}
 

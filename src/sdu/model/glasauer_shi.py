@@ -1,9 +1,16 @@
-"""Glasauer & Shi's (2022) full two-state observer.
+"""The duration-reproduction data of Glasauer & Shi (2021) and their two-state observer (manuscript Section 5.5,
+Appendix C).
 
-The implementation follows Eq. 4 and the Kalman equations in the paper.  The fitted
-parameters are the variance ratios v/r and q/r and the response shift Delta x.
-Durations are encoded as log(1 + d/d0); the supplied reference implementation decodes
-the estimate as d0 * (exp(x_hat + Delta x) - 1).
+Data: data/external/glasauer_shi_2021; one 400-trial sequence per participant and sequence type (random walk,
+randomized). load() returns them as {"<participant>|<sequence>": (durations, responses, valid)}.
+
+Two-state observer (Glasauer & Shi, 2022): Eq. 4 and the Kalman equations of the paper. The fitted parameters are
+the variance ratios v/r and q/r and the response shift Delta x. Durations are encoded as log(1 + d/d0); the supplied
+reference implementation decodes the estimate as d0 * (exp(x_hat + Delta x) - 1).
+
+Three-state observer on these data (sdu.model.engine): there is no coherence manipulation (coherence = 1 on every
+trial), so the C and S dimensions have no effect and the model reduces to one retention phi (phi_H) and the bias
+level (THREE_STATE; Appendix C compares B2 with B0), FIXED_THREE_STATE the parameters without effect.
 """
 
 from __future__ import annotations
@@ -11,7 +18,48 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import numpy as np
+import pandas as pd
 from scipy.optimize import least_squares
+
+from sdu import paths as SP
+from sdu.model import engine as G
+
+DATA = SP.EXTERNAL / "glasauer_shi_2021" / "Glasauer_Shi_2021b_duration_reproduction.csv"
+SEQUENCES = {1: "random walk", 2: "randomized"}                  # RandLevel
+THREE_STATE = {f"B{b}": G.Model(0, 0, b) for b in G.B_LEVELS}
+TRANSFER = ("B0", "B2")                                          # the models of the transfer test
+FIXED_THREE_STATE = {"phi_L": 0.0, "d0_LH": 0.0}                 # no low-coherence trials
+
+
+def load():
+    """{"<participant>|<sequence>": (durations, responses, valid)} in trial order."""
+    d = pd.read_csv(DATA).dropna(subset=["RandLevel"])
+    # The column labels of the CSV are swapped: "condition" (1-14) is the participant and "NSub" (1-20) the
+    # 40-trial block; NT (1-800) is the trial order within a participant.
+    units = {}
+    for (sub, level), g in d.groupby(["condition", "RandLevel"]):
+        g = g.sort_values("NT")
+        y = g.repDur.to_numpy(float)
+        units[f"{int(sub)}|{SEQUENCES[int(level)]}"] = (g.dur.to_numpy(float), y,
+                                                         (g.valid.to_numpy() == 1) & np.isfinite(y))
+    return units
+
+
+def participants(units):
+    return sorted({int(key.split("|")[0]) for key in units})
+
+
+def three_state_bounds(model):
+    """Bounds of a three-state model on these data, with the parameters without effect fixed."""
+    lo, hi = model.bounds()
+    for name, value in FIXED_THREE_STATE.items():
+        lo[G.IX[name]] = hi[G.IX[name]] = value
+    return lo, hi
+
+
+def three_state_arrays(duration, response, valid):
+    """Engine arrays (durations, coherence = 1, responses, valid)."""
+    return duration, np.ones(len(duration)), np.where(valid, response, 0.0), valid
 
 D0 = 0.1
 F = np.array([[0.0, 1.0], [0.0, 1.0]])

@@ -1,16 +1,16 @@
-"""Plots for the v3 parameter-recovery notebook. All annotations stay outside the data axes."""
+"""Plots of the parameter recovery (notebooks/recovery.ipynb, Appendix B.5). All annotations stay outside the data axes."""
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.ticker import FuncFormatter, MaxNLocator
 
-EXPERIMENT = {2: "Experiment 1", 1: "Experiment 2"}
-COLORS = {2: "#287CA6", 1: "#617D71"}
+EXPERIMENT = {1: "Experiment 1", 2: "Experiment 2"}
+COLORS = {1: "#287CA6", 2: "#617D71"}
 DISPLAY_NAMES = {
-    "lq1": "σq₁ (s)", "lq2": "σq₂ (s)", "beta": "φᴸ", "wuH": "φᴴ",
-    "lam": "λ", "lq3": "σq₃ (s)", "d0": "d₀ (s)", "ad0": "Δd₀ (s)",
-    "lsde": "σₑ (s)", "aq3": "ρq₃", "delta_phi": "Δφ", "delta_weight": "Δw",
+    "sd_q1": "σq₁ (s)", "sd_q2": "σq₂ (s)", "phi_L": "φᴸ", "phi_H": "φᴴ",
+    "lambda": "λ", "sd_q3": "σq₃ (s)", "d0": "d₀ (s)", "d0_LH": "Δd₀ (s)",
+    "sigma_e": "σₑ (s)", "ratio_q3": "ρq₃", "delta_phi": "Δφ", "delta_weight": "Δw",
 }
 
 
@@ -32,7 +32,7 @@ def recovery_table(summary, parameters, *, show_means=False, boundary_markers=Fa
         d = local[local.parameter == name].set_index("exp")
         marker = "†" if boundary_markers and ((d.lower_rate >= .2) | (d.upper_rate >= .2)).any() else ""
         row = {("Parameter", ""): DISPLAY_NAMES[name] + marker}
-        for exp in (2, 1):
+        for exp in (1, 2):
             value = d.loc[exp]
             label = EXPERIMENT[exp]
             row[label, "r: mean / cohort"] = f"{number(value.r_mean)} / {number(value.r)}"
@@ -76,7 +76,7 @@ def scatter_comparison(table, parameters):
         lo = min(both.true.min(), both.fitted.min())
         hi = max(both.true.max(), both.fitted.max())
         pad = max((hi-lo)*.06, .005)
-        for col, exp in enumerate((2, 1)):
+        for col, exp in enumerate((1, 2)):
             ax = axes[row, col]
             d = both[both.exp == exp]
             mean = d.groupby("Sub")[["true", "fitted"]].mean()
@@ -146,12 +146,12 @@ def scatter_grid(table, summary, parameters, exp, design, columns=None):
 
 def condition_means(table):
     """Mean by condition, with the 5th–95th range over the 20 simulated cohort means."""
-    pairs = [("beta", "wuH", r"Readout continuity $\phi$"),
+    pairs = [("phi_L", "phi_H", r"Readout continuity $\phi$"),
              ("weight_low", "weight_high", r"Trace weight $(1-K^{(x)})\phi$"),
              ("bias_sd_low", "bias_sd_high", "Bias innovation SD (s)")]
     d = table[table.design == "fitted"]
     fig, axes = plt.subplots(2, 3, figsize=(11, 6.2), sharey="col", layout="constrained")
-    for row, exp in enumerate((2, 1)):
+    for row, exp in enumerate((1, 2)):
         for ax, (low, high, title) in zip(axes[row], pairs):
             g = d[(d.exp == exp) & d.parameter.isin((low, high))]
             true = g.groupby("parameter").true.mean().reindex((high, low))
@@ -177,7 +177,7 @@ def condition_means(table):
 def contrast_distributions(contrasts):
     fig, axes = plt.subplots(2, 2, figsize=(8.5, 6.2), layout="constrained")
     local = contrasts[contrasts.design == "fitted"]
-    for row, exp in enumerate((2, 1)):
+    for row, exp in enumerate((1, 2)):
         for col, (parameter, label) in enumerate((("delta_phi", r"Mean $\phi^L-\phi^H$"),
                                                   ("delta_weight", r"Mean $w^L-w^H$"))):
             ax = axes[row, col]
@@ -198,7 +198,7 @@ def contrast_distributions(contrasts):
 def error_matrix(errors, parameters):
     fig, axes = plt.subplots(1, 2, figsize=(12, 6.2), layout="constrained")
     short = [meta[0].replace(" (s)", "") for meta in parameters.values()]
-    for ax, exp in zip(axes, (2, 1)):
+    for ax, exp in zip(axes, (1, 2)):
         m = errors[errors.exp == exp].pivot(index="parameter_a", columns="parameter_b", values="r")
         matrix = m.reindex(index=parameters, columns=parameters).to_numpy()
         im = ax.imshow(matrix, vmin=-1, vmax=1, cmap="RdBu_r")

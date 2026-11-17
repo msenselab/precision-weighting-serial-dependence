@@ -1,0 +1,21 @@
+{
+  "participants": 44,
+  "regular_grid": [
+    0.0,
+    0.1,
+    0.2,
+    0.30000000000000004,
+    0.4,
+    0.5,
+    0.6000000000000001,
+    0.7000000000000001,
+    0.8,
+    0.9,
+    1.0
+  ],
+  "additional_grid": "Each participant's original phi High MLE",
+  "reference_loss": 3.8414588207,
+  "forward_starts": "original MLE, previous profile point, default, independent random point",
+  "reverse_pass": "one warm start from the neighboring profile point",
+  "participants_sha256": "5eb5cc91d3d7e2f90541e05bdf3bb84a1c351ebaf7619fc156853daabded8360"
+}

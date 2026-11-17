@@ -12,12 +12,12 @@ from sdu import paths as SP  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-OUT = SP.RESULTS_BEHAVIOR / "analysis" / "sequence_audit"
+OUT = SP.BEHAVIOR_SEQUENCES
 OUT.mkdir(parents=True, exist_ok=True)
 
 DATA = {
-    "Exp1_dynamic": SP.PREPROCESSED / "E2_reprocessed.csv",
-    "Exp2_fixed": SP.PREPROCESSED / "E1_reprocessed.csv",
+    "Exp1_ramped": SP.PREPROCESSED_EXP[1],
+    "Exp2_constant": SP.PREPROCESSED_EXP[2],
 }
 
 

@@ -1,0 +1,41 @@
+{
+  "source_hashes": {
+    "results/behavior/primary/primary_dual_lmm_parameters.csv": "cf1005f20a45bf952d9fe92bc1e8469cd585042230548f7f78ba796c4d26e915",
+    "results/behavior/analysis/transitions/trial_lmm_contrasts.csv": "30051a1ed38124b19a8ec58577fc227efa10f24cea5c998248b4502db0df4d90",
+    "results/behavior/analysis/response_history/lmm_parameters.csv": "f0f1060c7c0a1f4f04b2026ed5548ccd1d761d761db6b856e3262767132d31e8",
+    "results/behavior/analysis/response_history/coherence_interaction_lmm.csv": "ca405e73aadc26b6ce6deed37022a115fcfa6f63b8b1745aefe5da96a0a0d39a",
+    "results/behavior/analysis/mean_shift/shift_by_duration.csv": "75c98d639420f82dd8ed1cadfc2c74cab08304c45f2f54194852a9f5588e0e1c",
+    "results/behavior/analysis/variability/summary.csv": "5d7be49ba167591b99a06b7152fbc5ad03950ede14b4a6637b60053ea93d6224",
+    "results/behavior/analysis/orderings/ordering_bayes_factors.csv": "2177b13ae1cd231eb627318266dccf01333b49568cc6bb130ddaf1163197759c",
+    "results/model/fits/all.csv": "ec0f88af856495caba59fe25578a91eb7390d17e80bcdc7402aff99e1700f5c8",
+    "results/model/model_comparison.csv": "2ceacd6d2e01e319c7b582e26c30d7e1711d333cc71c7e2d89d0836f5539ee3b",
+    "results/model/predictive_checks/duration_curves.csv": "abc107e0b5f2d255a956e7326aa4be79f9f061b16a2fbc949b4d7caf5143cbe1",
+    "results/model/parameter_recovery/parameter_summary.csv": "4eab4370341918b2a0263f43bebbb1874006a1af8c6329d9fd5361c2dddd5123",
+    "results/model/parameter_recovery/recovery_long.csv": "192426e7592222814efd0843c69f26e6b3b35732c1dfa47a2fff4ec7d929a016",
+    "results/model/model_recovery/switch_cohorts.csv": "7dae5168150323b8ca68f8e9ff70c21ce551e8ce2615e3a279aed5a83fdb9db0",
+    "results/model/high_continuity_profile/summary.csv": "b0541eb197269cccfb7f755c72667843e41c0b95e78fd12fb166865180e573d6",
+    "results/model/high_continuity_profile/all_curves.csv": "4303f870363d24612680177b1c6310201dfba5ebecdb5d0b3badde2bbbfa4929",
+    "results/model/glasauer_shi/three_state_fits.csv": "bb3d851d95ea14ead0103aa0617aee00933915dd46b9ca927c92a9a5e69245fb",
+    "results/model/glasauer_shi/two_state_fits.csv": "8360d3d3630764c4bb28ec7b8c94c1a6212e7732e6884defa38b21dfdb0425b2"
+  },
+  "figures": [
+    "figA1_behavioral_forests",
+    "figA2_response_history_compact",
+    "figA3_behavioral_checks",
+    "figB1_model_comparison_forest",
+    "figB2_duration_PPC_overlay",
+    "figB3_parameter_recovery_overview",
+    "figB4_cohort_effect_recovery",
+    "figB5_model_recovery_profiles",
+    "figC1_transfer_compact"
+  ],
+  "method": "Visualization of stored results; no refits, simulations or new significance tests",
+  "coherence_encoding": {
+    "High": "cyan, solid line, circle",
+    "Low": "red, dashed line, triangle"
+  },
+  "experiments_encoding": {
+    "Exp 1": "dark filled circle",
+    "Exp 2": "gray open square"
+  }
+}

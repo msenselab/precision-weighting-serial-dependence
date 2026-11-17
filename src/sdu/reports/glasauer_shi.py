@@ -1,9 +1,6 @@
-"""Helpers for notebooks/glasauer_shi.ipynb: 3SKF C3-S0-B2 and the Glasauer-Shi two-state model on Glasauer & Shi (2021).
-
-Requires GKF_READOUT=1 and the v3 engine configuration (set before sdu.model.engine is imported).
+"""Helpers for notebooks/glasauer_shi.ipynb: the three-state observer (B2) and the two-state model of Glasauer & Shi
+on the data of Glasauer & Shi (2021) (Section 5.5, Appendix C, Figure C1).
 """
-import sys
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -11,51 +8,44 @@ from scipy.stats import ttest_1samp, ttest_rel, wilcoxon
 
 from sdu import paths as SP
 from sdu.model import engine as G
+from sdu.model import fitting as FF
 from sdu.model import glasauer_shi as GS
 from sdu.reports import plots as P
 
-sys.path.insert(0, str(SP.ROOT / "scripts" / "model" / "external"))
-import fit_external as X  # noqa: E402
-
-RESULTS = SP.RESULTS / "model" / "minimal_qdiag" / "glasauer_shi"
-V3 = RESULTS / "v3"
-TRANSFER = V3 / "transfer"
+RESULTS = SP.GLASAUER_SHI
+TRANSFER = RESULTS / "transfer"
 CONDITIONS = ("randomized", "random walk")
-THREE = "3SKF C3-S0-B2"
-ABLATION = "3SKF B0 (no bias state)"
-TWO = "Glasauer–Shi two-state"
+THREE = "three-state B2"
+ABLATION = "three-state B0 (no bias state)"
+TWO = "two-state"
 MODELS = ("data", TWO, THREE)
 COLORS = {"data": P.INK, TWO: P.ORANGE, THREE: P.BLUE}
 SEQ_COL = {"randomized": P.BLUE, "random walk": "#98a3c1"}
-NAME = {"3SKF v3 R-B2": THREE, "3SKF v3 R-B0 (no bias state)": ABLATION, "Glasauer-Shi two-state": TWO}
 
 
 class Data:
-    """Trials, the paper model's randomized fits and the 3SKF separate fits."""
+    """Trials, the paper model's randomized fits and the three-state separate fits."""
 
     def __init__(self):
-        _, loaded = X.load("gs")
-        self.units = dict(loaded)
-        self.participants = sorted({int(key.split("|")[0]) for key in self.units})
+        self.units = GS.load()
+        self.participants = GS.participants(self.units)
         self.two_state = pd.read_csv(RESULTS / "two_state_fits.csv").set_index("sub")
-        fits = pd.read_csv(V3 / "fits_separate.csv")
-        fits = fits[fits.model.isin(X.MODELS)].copy()
+        fits = pd.read_csv(RESULTS / "three_state_fits.csv")
         fits["sub"] = fits.unit.str.split("|").str[0].astype(int)
         fits["condition"] = fits.unit.str.split("|").str[1]
         self.three_state = fits
-        self.randomized_3skf = fits[(fits.model == "R-B2") & (fits.condition == "randomized")].set_index("sub")
-        self.spec = X.MODELS["R-B2"]
+        self.randomized_three_state = fits[(fits.model == "B2") & (fits.condition == "randomized")].set_index("sub")
+        self.spec = GS.THREE_STATE["B2"]
         assert self.participants == list(range(1, 15))
-        assert set(self.two_state.index) == set(self.participants) == set(self.randomized_3skf.index)
+        assert set(self.two_state.index) == set(self.participants) == set(self.randomized_three_state.index)
 
     def predictions(self, participant, condition):
         """Observed responses and the two models' deterministic predictions (parameters frozen from randomized)."""
-        duration, observed, valid = self.units[f"{participant}|{condition}"][0]
+        duration, observed, valid = self.units[f"{participant}|{condition}"]
         fit = self.two_state.loc[participant]
         paper = GS.observer(duration, fit.v_over_r, fit.q_over_r, fit["shift"])
-        theta = self.randomized_3skf.loc[participant, G.NAMES].to_numpy(float)
-        three = G.response_mean(theta, self.spec, np.log(duration), np.ones(len(duration)),
-                                np.linspace(-1, 1, len(duration)))
+        theta = FF.theta(self.randomized_three_state.loc[participant])
+        three = G.response_mean(theta, self.spec, duration, np.ones(len(duration)))
         return duration, valid, {"data": observed, TWO: paper, THREE: three}
 
 
@@ -168,7 +158,7 @@ def duration_curves(d):
 
 
 def plot_duration_curves(curves):
-    """Two columns: observed vs 3SKF (left), observed vs two-state (right); one row per sequence and duration."""
+    """Two columns: observed vs three-state (left), observed vs two-state (right); one row per sequence and duration."""
     rows = [(condition, panel) for panel in ("current duration", "previous duration") for condition in CONDITIONS]
     fig, axes = plt.subplots(len(rows), 2, figsize=(13, 17), sharey="row")
     for r_i, (condition, panel) in enumerate(rows):
@@ -216,8 +206,6 @@ def transfer_tables():
     scores = pd.read_csv(TRANSFER / "participant_scores.csv")
     summary = pd.read_csv(TRANSFER / "pairwise_summary.csv")
     assert scores.shape[0] == 14 * 3 and summary.isna().sum().sum() == 0
-    summary["comparator"] = summary.comparator.map(NAME)
-    scores["model"] = scores.model.map(NAME)
     diff, fav = f"{THREE} − comparator", f"participants favoring {THREE}"
     comparison = summary[summary.metric.isin(METRICS)].copy()
     comparison["metric"] = comparison.metric.map(METRICS)
@@ -235,7 +223,7 @@ def aic_comparison():
     fits = pd.read_csv(TRANSFER / "fits.csv")
     fits["sub"] = fits.unit.str.split("|").str[0].astype(int)
     aic = {TWO: paper.aic}
-    for model, name in (("R-B0", ABLATION), ("R-B2", THREE)):
+    for model, name in (("B0", ABLATION), ("B2", THREE)):
         frame = fits[fits.model == model].set_index("sub")
         assert (frame.n == paper.n.reindex(frame.index)).all()
         aic[name] = 2 * frame.k - 2 * frame.LL
@@ -250,13 +238,13 @@ def aic_comparison():
 # ------------------------------------------------------------------ parameters by sequence type
 def sequence_parameters(d):
     rows = []
-    for _, fit in d.three_state[d.three_state.model == "R-B2"].iterrows():
-        theta = fit[G.NAMES].to_numpy(float)
+    for _, fit in d.three_state[d.three_state.model == "B2"].iterrows():
+        theta = FF.theta(fit)
         p = G.unpack(theta)
-        duration, _, valid = d.units[f"{int(fit['sub'])}|{fit.condition}"][0]
+        duration, _, valid = d.units[f"{int(fit['sub'])}|{fit.condition}"]
         _, _, kx, _, K, _ = G.observer(theta, d.spec, duration, np.ones(len(duration)))
         rows.append({"sub": int(fit["sub"]), "condition": fit.condition, "q1": p["q1"], "q2": p["q2"],
-                     "sb": P.b2_bias_sd(p, 1.0), "lam": p["lam"], "phi": fit.wuH, "sde": p["sde"], "offset": p["d0"],
+                     "sb": P.b2_bias_sd(p, 1.0), "lam": p["lam"], "phi": fit.phi_H, "sde": p["sde"], "offset": p["d0"],
                      "gx": kx[valid].mean(), "gm": K[valid, 0].mean()})
     out = pd.DataFrame(rows)
     assert out.groupby("condition")["sub"].nunique().eq(14).all()

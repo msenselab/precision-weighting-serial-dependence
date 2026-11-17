@@ -1,0 +1,3 @@
+generator,cohorts,AIC correct,datasets,datasets AIC correct,generator passes focal,other passes focal,generator only passes focal,median focal z (generator),median focal z (other)
+S0,100,0.99,2200,1429,0.94,0.64,0.33,0.13542516579138114,1.2380891013884652
+S3,100,0.91,2200,1312,0.95,0.61,0.39,0.04444365505229435,-1.2388142591730458

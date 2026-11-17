@@ -8,21 +8,21 @@ from sdu import paths as SP
 from sdu.model import fitting as FF
 from sdu.model import stats as S
 
-READY = SP.RESULTS_BEHAVIOR / "manuscript_ready"
-DATASET = {2: "manuscript_exp1_dynamic", 1: "manuscript_exp2_fixed"}
+READY = SP.BEHAVIOR_PRIMARY
+DATASET = {1: "exp1_ramped", 2: "exp2_constant"}
 
 
 @pytest.fixture(scope="module")
 def observed():
-    return {exp: S.observed(exp) for exp in (2, 1)}
+    return {exp: S.observed(exp) for exp in (1, 2)}
 
 
 def test_core_contrasts_defined():
-    assert S.CORE == {2: ["low_high"], 1: ["LL_other_three"]}
+    assert S.CORE == {1: ["low_high"], 2: ["LL_other_three"]}
 
 
 def test_exp1_low_high_matches_main_text(observed):
-    d = observed[2]
+    d = observed[1]
     assert len(d) == 22
     assert d.low_high.mean() == pytest.approx(0.04771831269722826, abs=1e-9)
     t = st.ttest_1samp(d.low_high, 0).statistic
@@ -30,11 +30,11 @@ def test_exp1_low_high_matches_main_text(observed):
 
 
 def test_exp2_same_switch_matches_main_text(observed):
-    assert observed[1].same_switch.mean() == pytest.approx(0.02789754706534767, abs=1e-9)
+    assert observed[2].same_switch.mean() == pytest.approx(0.02789754706534767, abs=1e-9)
 
 
 def test_exp2_ll_other_three_matches_contrast(observed):
-    d = observed[1]
+    d = observed[2]
     assert d.LL_other_three.mean() == pytest.approx(0.06071896441040959, abs=1e-9)
     np.testing.assert_allclose(
         d.LL_other_three,
@@ -44,9 +44,9 @@ def test_exp2_ll_other_three_matches_contrast(observed):
 
 
 def test_r25_conditional_mean_shifts_match_participant_analysis(observed):
-    assert observed[2].mean_bias_low_high.mean() == pytest.approx(-0.08325131319475902, abs=1e-9)
-    assert observed[1].mean_bias_low_high.mean() == pytest.approx(-0.01105428719785276, abs=1e-9)
-    for exp in (2, 1):
+    assert observed[1].mean_bias_low_high.mean() == pytest.approx(-0.08325131319475902, abs=1e-9)
+    assert observed[2].mean_bias_low_high.mean() == pytest.approx(-0.01105428719785276, abs=1e-9)
+    for exp in (1, 2):
         d = observed[exp]
         np.testing.assert_allclose(d.mean_bias_Low - d.mean_bias_High, d.mean_bias_low_high, atol=1e-12)
 
@@ -66,9 +66,9 @@ def test_participant_slopes_match_manuscript_file(observed):
 
 def test_transition_cells_match_behavioral_analysis(observed):
     """Four-transition slopes equal the participant cell slopes of the behavioural analysis (Tables A1a-c)."""
-    ref = pd.read_csv(SP.RESULTS_BEHAVIOR / "analysis" / "four_cells" / "participant_cell_slopes.csv",
+    ref = pd.read_csv(SP.BEHAVIOR_TRANSITIONS / "participant_cell_slopes.csv",
                       dtype={"subID": str})
-    for exp, name in ((2, "Exp1_dynamic"), (1, "Exp2_fixed")):
+    for exp, name in ((1, "Exp1_ramped"), (2, "Exp2_constant")):
         r = ref[ref.experiment == name].assign(Sub=lambda d: d.subID.astype(int)).pivot(index="Sub", columns="cell",
                                                                                          values="previous_duration_slope")
         d = observed[exp].set_index("Sub")
@@ -86,11 +86,12 @@ def test_block_boundary():
 
 def test_simulated_cohort_uses_same_function():
     """participant_stats on arrays gives the same values as observed() for one participant."""
-    exp = 2
+    exp = 1
     data = FF.load(exp)
     sub = sorted(data)[0]
     obs = S.observed(exp).set_index("Sub").loc[sub]
-    one = S.participant_stats_arrays(exp, sub, data[sub][3])
+    T, coh, y, valid = data[sub]
+    one = S.participant_stats_arrays(exp, sub, np.where(valid, y, np.nan))
     for k in ("b2_Low", "b2_High", "b2_LL", "LL_other_three", "LL_HL", "same_switch", "rsd_Low",
               "mean_bias_low_high"):
         assert one[k] == pytest.approx(obs[k], abs=1e-12)

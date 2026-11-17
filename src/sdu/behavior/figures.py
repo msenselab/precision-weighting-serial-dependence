@@ -1,7 +1,7 @@
 """Behavioural manuscript figures from the reprocessed data.
 
-Each figure function returns the matplotlib figure; with save=True it also writes PNG and PDF to
-results/behavior/figures. Run `python -m sdu.behavior.figures` to write the manuscript and audit figures."""
+Each figure function returns the matplotlib figure; with save=True it also writes PNG and PDF under
+results/figures. Run `python -m sdu.behavior.figures` to write the manuscript and audit figures."""
 
 from __future__ import annotations
 
@@ -20,12 +20,13 @@ from sdu import paths as SP
 
 ROOT = SP.ROOT
 DATA_DIR = SP.PREPROCESSED
-READY_DIR = SP.RESULTS_BEHAVIOR / "manuscript_ready"
-FIG_DIR = SP.RESULTS_BEHAVIOR / "figures"
+READY_DIR = SP.BEHAVIOR_PRIMARY
+FIG_DIR = SP.FIGURES_MAIN
+APPENDIX_FIG_DIR = SP.FIGURES_APPENDIX
 
-# Nature-style palette used by the submitted manuscript figures.  TransitionType
-# retains the data collection's old uncertainty notation, so display labels are
-# deliberately remapped to objective coherence below.
+# Palette of the manuscript figures. The data column TransitionType keeps the
+# notation of the experiment software (uncertainty levels), so display labels are
+# remapped to objective coherence below.
 COLORS = {
     "Low": "#E64B35", "High": "#4DBBD5", "Same": "#3C5488", "Switch": "#F39B7F",
     "Exp1": "#00A087", "Exp2": "#8491B4",
@@ -36,13 +37,13 @@ TRANSITION_LABELS = {"HH": "LL", "HL": "LH", "LH": "HL", "LL": "HH"}
 TRANSITION_X_JITTER = {t: (i - 1.5) * 0.012 for i, t in enumerate(TRANSITION_ORDER)}
 
 DATASETS = {
-    "manuscript_exp1_dynamic": DATA_DIR / "E2_reprocessed.pkl",
-    "manuscript_exp2_fixed": DATA_DIR / "E1_reprocessed.pkl",
+    "exp1_ramped": SP.PREPROCESSED_PKL[1],
+    "exp2_constant": SP.PREPROCESSED_PKL[2],
 }
 
 DISPLAY = {
-    "manuscript_exp1_dynamic": "Experiment 1",
-    "manuscript_exp2_fixed": "Experiment 2",
+    "exp1_ramped": "Experiment 1",
+    "exp2_constant": "Experiment 2",
 }
 
 
@@ -251,7 +252,7 @@ def draw_slope_bar(ax, slopes: pd.DataFrame, dataset: str, grouping: str, condit
 
 def figure2(datasets: dict[str, pd.DataFrame], slopes: pd.DataFrame, save: bool = False):
     del slopes  # Figure 2 uses the original transition-wise Eq. 2 fits.
-    df1, df2 = datasets["manuscript_exp1_dynamic"], datasets["manuscript_exp2_fixed"]
+    df1, df2 = datasets["exp1_ramped"], datasets["exp2_constant"]
     coef1, coef2 = transition_coefficients(df1, "Experiment 1"), transition_coefficients(df2, "Experiment 2")
     fig, axes = plt.subplots(3, 2, figsize=(12, 12.2), sharey="row")
     _transition_line_panel(axes[0, 0], df1, coef1, "curDur", "central_slope",
@@ -290,7 +291,7 @@ def figure3(slopes: pd.DataFrame, save: bool = False):
     ]
     for ax, (grouping, conditions, panel, palette) in zip(axes, panel_specs):
         width = .35
-        for j, dataset in enumerate(["manuscript_exp1_dynamic", "manuscript_exp2_fixed"]):
+        for j, dataset in enumerate(["exp1_ramped", "exp2_constant"]):
             dd = slopes[(slopes["dataset"].eq(dataset)) & (slopes["grouping"].eq(grouping))]
             values, errors = {}, {}
             for i, cond in enumerate(conditions):
@@ -339,7 +340,7 @@ def temporal_window(datasets: dict[str, pd.DataFrame]) -> pd.DataFrame:
         for lag, predictor in lag_specs:
             if predictor not in df.columns:
                 continue
-            if dataset == "manuscript_exp1_dynamic":
+            if dataset == "exp1_ramped":
                 df["lag_condition"] = df["current_coherence_label"]
             else:
                 if lag < 0:
@@ -387,9 +388,9 @@ def temporal_window(datasets: dict[str, pd.DataFrame]) -> pd.DataFrame:
 def figure4(summary: pd.DataFrame, save: bool = False):
     fig, axes = plt.subplots(1, 2, figsize=(12, 6), sharey=True)
     specs = [
-        ("manuscript_exp1_dynamic", ["Low", "High"], "A: Experiment 1",
+        ("exp1_ramped", ["Low", "High"], "A: Experiment 1",
          {"Low": "Current low coherence", "High": "Current high coherence"}),
-        ("manuscript_exp2_fixed", ["Same", "Switch"], "B: Experiment 2",
+        ("exp2_constant", ["Same", "Switch"], "B: Experiment 2",
          {"Same": "Current vs lag: same", "Switch": "Current vs lag: switch"}),
     ]
     x_order = [-3, -2, -1, 1, 2]
@@ -431,8 +432,8 @@ def figure_a1(save: bool = False):
     params["lag"] = params["parameter"].str.extract(r"(\d+)").astype(int)
     fig, ax = plt.subplots(figsize=(5.6, 3.4), constrained_layout=True)
     for dataset, color, x_offset in [
-        ("manuscript_exp1_dynamic", COLORS["Exp1"], -0.10),
-        ("manuscript_exp2_fixed", COLORS["Exp2"], 0.10),
+        ("exp1_ramped", COLORS["Exp1"], -0.10),
+        ("exp2_constant", COLORS["Exp2"], 0.10),
     ]:
         dd = params[params["dataset"].eq(dataset)].sort_values("lag")
         x = dd["lag"].astype(float) + x_offset
@@ -446,8 +447,9 @@ def figure_a1(save: bool = False):
     ax.legend(frameon=False, fontsize=8)
     ax.spines[["top", "right"]].set_visible(False)
     if save:
-        FIG_DIR.mkdir(parents=True, exist_ok=True)
-        for path in [FIG_DIR / "figA1_response_error_lag.png", FIG_DIR / "figA1_response_error_lag.pdf"]:
+        APPENDIX_FIG_DIR.mkdir(parents=True, exist_ok=True)
+        for path in [APPENDIX_FIG_DIR / "figA1_response_error_lag.png",
+                     APPENDIX_FIG_DIR / "figA1_response_error_lag.pdf"]:
             fig.savefig(path, dpi=300, bbox_inches="tight")
         plt.close(fig)
     return fig
@@ -458,7 +460,7 @@ def figure_four_transitions(
 ):
     """Participant slopes for LL/LH/HL/HH; brackets mark between-condition contrasts only."""
     cells = ["LL", "LH", "HL", "HH"]
-    specs = [(2, "Exp1_dynamic", "A  Experiment 1"), (1, "Exp2_fixed", "B  Experiment 2")]
+    specs = [(1, "Exp1_ramped", "A  Experiment 1"), (2, "Exp2_constant", "B  Experiment 2")]
     fig, axes = plt.subplots(1, 2, figsize=(10.4, 4.1), sharey=True)
     for ax, (code, experiment, title) in zip(axes, specs):
         values = observed[code][[f"b2_{cell}" for cell in cells]]
@@ -472,7 +474,7 @@ def figure_four_transitions(
             jitter = np.random.default_rng(100 * code + i).uniform(-.14, .14, len(y))
             ax.scatter(np.full(len(y), i) + jitter, y, color="black", s=13, alpha=.42, zorder=3)
 
-        if code == 2:
+        if code == 1:
             contrast = participant_contrasts[
                 participant_contrasts["experiment"].eq(experiment)
                 & participant_contrasts["contrast"].eq("current_L_minus_H")
@@ -501,8 +503,9 @@ def figure_four_transitions(
              ha="center", fontsize=9)
     fig.tight_layout(rect=(0, .05, 1, 1), w_pad=2)
     if save:
-        FIG_DIR.mkdir(parents=True, exist_ok=True)
-        for path in [FIG_DIR / "four_transition_slopes.png", FIG_DIR / "four_transition_slopes.pdf"]:
+        APPENDIX_FIG_DIR.mkdir(parents=True, exist_ok=True)
+        for path in [APPENDIX_FIG_DIR / "four_transition_slopes.png",
+                     APPENDIX_FIG_DIR / "four_transition_slopes.pdf"]:
             fig.savefig(path, dpi=300, bbox_inches="tight")
         plt.close(fig)
     return fig
@@ -513,8 +516,8 @@ def figure_sequence_audit(
 ):
     """Visual audit of coherence balance, switching, and the four transition counts."""
     experiments = list(sequence_summary["experiment"])
-    exp_labels = {"Exp1_dynamic": "Experiment 1", "Exp2_fixed": "Experiment 2"}
-    exp_colors = {"Exp1_dynamic": COLORS["Exp1"], "Exp2_fixed": COLORS["Exp2"]}
+    exp_labels = {"Exp1_ramped": "Experiment 1", "Exp2_constant": "Experiment 2"}
+    exp_colors = {"Exp1_ramped": COLORS["Exp1"], "Exp2_constant": COLORS["Exp2"]}
     metrics = [
         ("mean_p_low", "Low trials"),
         ("mean_p_switch", "Switches"),
@@ -563,8 +566,8 @@ def figure_sequence_audit(
     ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout(w_pad=2)
     if save:
-        FIG_DIR.mkdir(parents=True, exist_ok=True)
-        for path in [FIG_DIR / "sequence_audit.png", FIG_DIR / "sequence_audit.pdf"]:
+        APPENDIX_FIG_DIR.mkdir(parents=True, exist_ok=True)
+        for path in [APPENDIX_FIG_DIR / "sequence_audit.png", APPENDIX_FIG_DIR / "sequence_audit.pdf"]:
             fig.savefig(path, dpi=300, bbox_inches="tight")
         plt.close(fig)
     return fig
@@ -613,8 +616,9 @@ def figure_ordering_bayes_factors(ordering: pd.DataFrame, save: bool = False):
              ha="center", fontsize=9)
     fig.tight_layout(rect=(0, .045, 1, 1), h_pad=2, w_pad=1.5)
     if save:
-        FIG_DIR.mkdir(parents=True, exist_ok=True)
-        for path in [FIG_DIR / "ordering_bayes_factors.png", FIG_DIR / "ordering_bayes_factors.pdf"]:
+        APPENDIX_FIG_DIR.mkdir(parents=True, exist_ok=True)
+        for path in [APPENDIX_FIG_DIR / "ordering_bayes_factors.png",
+                     APPENDIX_FIG_DIR / "ordering_bayes_factors.pdf"]:
             fig.savefig(path, dpi=300, bbox_inches="tight")
         plt.close(fig)
     return fig
@@ -629,16 +633,16 @@ def main() -> None:
     figure4(temporal, save=True)
     figure_a1(save=True)
     from sdu.model import stats as model_stats
-    participant_contrasts = pd.read_csv(SP.RESULTS_BEHAVIOR / "analysis" / "four_cells" / "participant_contrasts.csv")
-    figure_four_transitions({code: model_stats.observed(code) for code in (2, 1)}, participant_contrasts, save=True)
-    sequence_dir = SP.RESULTS_BEHAVIOR / "analysis" / "sequence_audit"
+    participant_contrasts = pd.read_csv(SP.BEHAVIOR_TRANSITIONS / "participant_contrasts.csv")
+    figure_four_transitions({code: model_stats.observed(code) for code in (1, 2)}, participant_contrasts, save=True)
+    sequence_dir = SP.BEHAVIOR_SEQUENCES
     figure_sequence_audit(
         pd.read_csv(sequence_dir / "sequence_summary.csv"),
         pd.read_csv(sequence_dir / "transition_summary.csv"),
         save=True,
     )
     figure_ordering_bayes_factors(
-        pd.read_csv(SP.RESULTS_BEHAVIOR / "analysis" / "behavior_extra" / "ordering_bayes_factors.csv"),
+        pd.read_csv(SP.BEHAVIOR_ORDERINGS / "ordering_bayes_factors.csv"),
         save=True,
     )
     print("Saved behavioural manuscript and audit figures.")

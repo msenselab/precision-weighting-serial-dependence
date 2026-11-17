@@ -1,0 +1,63 @@
+{
+  "seed": 20261113,
+  "local_reps": 20,
+  "range_n": 200,
+  "starts": 12,
+  "total_starts": 13,
+  "units": 1280,
+  "parameters": {
+    "sd_q1": {
+      "label": "$\\sigma_{q_1}$ (s)",
+      "meaning": "Fast innovation SD",
+      "unit": "s"
+    },
+    "sd_q2": {
+      "label": "$\\sigma_{q_2}$ (s)",
+      "meaning": "Slow innovation SD",
+      "unit": "s"
+    },
+    "phi_L": {
+      "label": "$\\phi^L$",
+      "meaning": "Low readout continuity",
+      "unit": ""
+    },
+    "phi_H": {
+      "label": "$\\phi^H$",
+      "meaning": "High readout continuity",
+      "unit": ""
+    },
+    "lambda": {
+      "label": "$\\lambda$",
+      "meaning": "Bias persistence",
+      "unit": ""
+    },
+    "sd_q3": {
+      "label": "$\\sigma_{q_3}$ (s)",
+      "meaning": "Baseline bias innovation SD",
+      "unit": "s"
+    },
+    "d0": {
+      "label": "$d_0$ (s)",
+      "meaning": "Baseline response offset",
+      "unit": "s"
+    },
+    "d0_LH": {
+      "label": "$\\Delta d_0$ (s)",
+      "meaning": "Low minus High response offset",
+      "unit": "s"
+    },
+    "sigma_e": {
+      "label": "$\\sigma_e$ (s)",
+      "meaning": "Response noise SD",
+      "unit": "s"
+    },
+    "ratio_q3": {
+      "label": "$\\rho_{q_3}$",
+      "meaning": "Low/High bias variance ratio",
+      "unit": "ratio"
+    }
+  },
+  "design_sha256": "5453df8ae4140e16401d7b2d7a9fcb5b7f0d4dedc07a2010320a916eb7713d68",
+  "sequence": "Full observed sequence and response mask, identical to the main fits",
+  "correlations": "Across 22 participants within each fitted-design repetition; across 200 range draws"
+}
